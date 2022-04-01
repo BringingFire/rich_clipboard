@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:rich_clipboard/rich_clipboard.dart';
 import 'package:rich_clipboard_example/pages/flutter_clipboard.dart';
+import 'package:rich_clipboard_example/pages/rich_clipboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,73 +14,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<String> _availableTypes = ['loading...'];
-  String _html = 'NO HTML';
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    List<String> availableTypes = [];
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      availableTypes = await RichClipboard.getAvailableTypes();
-    } on PlatformException {
-      availableTypes = ['Failed to get clipboard available types.'];
-    }
-
-    String html;
-    try {
-      html = (await RichClipboard.asHtml()) ?? 'NO HTML FOUND';
-    } on PlatformException {
-      html = 'Failed to get html';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _availableTypes = availableTypes;
-      _html = html;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
       home: HomePage(),
-      // home: Scaffold(
-      //   appBar: AppBar(
-      //     title: const Text('Plugin example app'),
-      //   ),
-      //   // body: SingleChildScrollView(
-      //   //   child: Column(
-      //   //     mainAxisAlignment: MainAxisAlignment.center,
-      //   //     crossAxisAlignment: CrossAxisAlignment.center,
-      //   //     children: [
-      //   //       Text(
-      //   //         'Available types:\n$_availableTypes\n',
-      //   //         textAlign: TextAlign.center,
-      //   //       ),
-      //   //       Text(
-      //   //         'Clipboard HTML:\n$_html\n',
-      //   //         textAlign: TextAlign.center,
-      //   //       ),
-      //   //       ElevatedButton(
-      //   //         onPressed: initPlatformState,
-      //   //         child: const Text('Refresh'),
-      //   //       ),
-      //   //     ],
-      //   //   ),
-      //   // ),
-      // ),
     );
   }
 }
@@ -98,9 +32,9 @@ class _MenuItem {
 
 final _menu = <_MenuItem>[
   _MenuItem(
-    icon: Icons.paste,
-    title: 'Flutter clipboard',
-    builder: (context) => const FlutterClipboardPage(),
+    icon: Icons.attach_money,
+    title: 'Rich clipboard',
+    builder: (context) => const RichClipboardPage(),
   ),
   _MenuItem(
     icon: Icons.paste,
@@ -123,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FIXME'),
+        title: Text(_menu[_activeIndex].title),
       ),
       drawer: _drawer,
       body: _menu[_activeIndex].builder(context),
