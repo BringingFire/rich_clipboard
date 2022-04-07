@@ -1,6 +1,9 @@
 import Cocoa
 import FlutterMacOS
 
+let mimeTextPlain = "text/plain"
+let mimeTextHtml = "text/html"
+
 public class RichClipboardPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "rich_clipboard", binaryMessenger: registrar.messenger)
@@ -15,12 +18,10 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         case "RichClipboard.setData":
             setData(call.arguments)
             result(nil)
-        case "getItemCount":
+        case "RichClipboard.getItemCount":
             result(getItemCount())
-        case "getAvailableTypes":
+        case "RichClipboard.getAvailableTypes":
             result(getAvailableTypes())
-        case "asHtml":
-            result(asHtml())
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -31,8 +32,8 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         let text = board.string(forType: .string)
         let html = board.string(forType: .html) ?? getRtfAsHtml()
         return [
-            "text/plain": text,
-            "text/html": html,
+            mimeTextPlain: text,
+            mimeTextHtml: html,
         ]
     }
 
@@ -41,7 +42,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
             return
         }
 
-        guard let text = data["text/plain"] else {
+        guard let text = data[mimeTextPlain] else {
             return
         }
 
@@ -50,57 +51,37 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
 
         board.setString(text, forType: .string)
 
-        if let html = data["text/html"] {
+        if let html = data[mimeTextHtml] {
             board.setString(html, forType: .html)
         }
     }
 
     func getRtfAsHtml() -> String? {
-        if let boardRtf = NSPasteboard.general.data(forType: .rtf) {
-            if let attrStr = NSAttributedString(rtf: boardRtf, documentAttributes: nil) {
-                if let htmlData = try? attrStr.data(
-                    from: NSRange(location: 0, length: attrStr.length),
-                    documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
-                {
-                    if let htmlStr = String(data: htmlData, encoding: String.Encoding.utf8) {
-                        return htmlStr
-                    }
-                }
-            }
+        guard let boardRtf = NSPasteboard.general.data(forType: .rtf) else {
+            return nil
         }
-        return nil
+        guard let attrStr = NSAttributedString(rtf: boardRtf, documentAttributes: nil) else {
+            return nil
+        }
+        guard let htmlData = try? attrStr.data(
+            from: NSRange(location: 0, length: attrStr.length),
+            documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
+        else {
+            return nil
+        }
+        return String(data: htmlData, encoding: String.Encoding.utf8)
     }
 
     func getItemCount() -> Int {
         NSPasteboard.general.pasteboardItems?.count ?? 0
     }
 
-    func asHtml() -> String? {
-        let board = NSPasteboard.general
-        if let boardHtml = board.string(forType: .html) {
-            return boardHtml
-        }
-        if let boardRtf = board.data(forType: .rtf) {
-            if let attrStr = NSAttributedString(rtf: boardRtf, documentAttributes: nil) {
-                if let htmlData = try? attrStr.data(
-                    from: NSRange(location: 0, length: attrStr.length),
-                    documentAttributes: [NSAttributedString.DocumentAttributeKey.documentType: NSAttributedString.DocumentType.html])
-                {
-                    if let htmlStr = String(data: htmlData, encoding: String.Encoding.utf8) {
-                        return htmlStr
-                    }
-                }
-            }
-        }
-        return nil
-    }
-
     func getAvailableTypes() -> [String] {
-        if let types = NSPasteboard.general.types {
-            return types.map { type in
-                type.rawValue
-            }
+        guard let types = NSPasteboard.general.types else {
+            return []
         }
-        return ["NOPE"]
+        return types.map { type in
+            type.rawValue
+        }
     }
 }

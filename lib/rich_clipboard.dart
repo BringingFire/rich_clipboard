@@ -41,16 +41,12 @@ class RichClipboard {
   }
 
   static Future<int> getItemCount() async {
-    return await _channel.invokeMethod('getItemCount');
-  }
-
-  static Future<String?> asHtml() async {
-    return await _channel.invokeMethod('asHtml');
+    return await _channel.invokeMethod('RichClipboard.getItemCount');
   }
 
   static Future<List<String>> getAvailableTypes() async {
     final List<String>? result =
-        await _channel.invokeListMethod('getAvailableTypes');
+        await _channel.invokeListMethod('RichClipboard.getAvailableTypes');
     return result ?? [];
   }
 }
