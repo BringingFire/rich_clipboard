@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:rich_clipboard/rich_clipboard.dart';
@@ -45,6 +47,11 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final monoStyle = theme.textTheme.bodyText2!.copyWith(
+      fontFamily: 'monospace',
+      fontFamilyFallback: ['Menlo', 'Consolas', 'Roboto Mono'],
+      fontFeatures: const [FontFeature.tabularFigures()],
+    );
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -72,9 +79,7 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
                 minLines: 1,
                 maxLines: null,
                 readOnly: true,
-                style: theme.textTheme.bodyText2!.copyWith(
-                  fontFamily: 'monospace',
-                ),
+                style: monoStyle,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const Text('text/html'),
@@ -82,9 +87,7 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
                 controller: _htmlContentsController,
                 minLines: 1,
                 maxLines: null,
-                style: theme.textTheme.bodyText2!.copyWith(
-                  fontFamily: 'monospace',
-                ),
+                style: monoStyle,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const Text('text/plain'),
@@ -92,9 +95,7 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
                 controller: _textContentsController,
                 minLines: 1,
                 maxLines: null,
-                style: theme.textTheme.bodyText2!.copyWith(
-                  fontFamily: 'monospace',
-                ),
+                style: monoStyle,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
               ),
               const Gap(12),
