@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rich_clipboard_example/pages/flutter_clipboard.dart';
 import 'package:rich_clipboard_example/pages/rich_clipboard.dart';
+import 'package:rich_clipboard_example/pages/widgets_from_html.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +36,11 @@ final _menu = <_MenuItem>[
     icon: Icons.attach_money,
     title: 'Rich clipboard',
     builder: (context) => const RichClipboardPage(),
+  ),
+  _MenuItem(
+    icon: Icons.build,
+    title: 'Widgets from html',
+    builder: (context) => const WidgetsFromHtmlPage(),
   ),
   _MenuItem(
     icon: Icons.paste,
