@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:rich_clipboard/rich_clipboard.dart';
 
-class RichClipboardPage extends StatefulWidget {
-  static String kTextPlain = 'text/plain';
-  static String kTextHtml = 'text/html';
+const kTextPlain = 'text/plain';
+const kTextHtml = 'text/html';
 
+class RichClipboardPage extends StatefulWidget {
   const RichClipboardPage({Key? key}) : super(key: key);
 
   @override
@@ -52,85 +52,99 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
       fontFamilyFallback: ['Menlo', 'Consolas', 'Roboto Mono'],
       fontFeatures: const [FontFeature.tabularFigures()],
     );
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                children: [
-                  Text('Clipboard available types ($_availableCount total)'),
-                  IconButton(
-                    onPressed: _refreshTypes,
-                    iconSize: 16,
-                    splashRadius: 12,
-                    icon: const Icon(
-                      Icons.refresh,
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                            'Clipboard available types ($_availableCount total)'),
+                        IconButton(
+                          onPressed: _refreshTypes,
+                          iconSize: 16,
+                          splashRadius: 12,
+                          icon: const Icon(
+                            Icons.refresh,
+                          ),
+                        )
+                      ],
                     ),
-                  )
-                ],
+                    TextField(
+                      controller: _availableController,
+                      minLines: 1,
+                      maxLines: null,
+                      readOnly: true,
+                      style: monoStyle,
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                    ),
+                    const Gap(10),
+                    const Text(kTextHtml),
+                    const Gap(5),
+                    TextField(
+                      controller: _htmlContentsController,
+                      minLines: 1,
+                      maxLines: null,
+                      style: monoStyle,
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                    ),
+                    const Gap(10),
+                    const Text(kTextPlain),
+                    const Gap(5),
+                    TextField(
+                      controller: _textContentsController,
+                      minLines: 1,
+                      maxLines: null,
+                      style: monoStyle,
+                      decoration:
+                          const InputDecoration(border: OutlineInputBorder()),
+                    ),
+                  ],
+                ),
               ),
-              TextField(
-                controller: _availableController,
-                minLines: 1,
-                maxLines: null,
-                readOnly: true,
-                style: monoStyle,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
+            ),
+          ),
+          const Gap(12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+                onPressed: () async {
+                  final plainText = _textContentsController.text;
+                  final htmlText = _htmlContentsController.text;
+                  final data = RichClipboardData(
+                    text: plainText.isEmpty ? null : plainText,
+                    html: htmlText.isEmpty ? null : htmlText,
+                  );
+                  await RichClipboard.setData(data);
+                  await _refreshTypes();
+                },
+                child: const Text('Copy'),
               ),
-              const Text('text/html'),
-              TextField(
-                controller: _htmlContentsController,
-                minLines: 1,
-                maxLines: null,
-                style: monoStyle,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-              ),
-              const Text('text/plain'),
-              TextField(
-                controller: _textContentsController,
-                minLines: 1,
-                maxLines: null,
-                style: monoStyle,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-              ),
-              const Gap(12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: Colors.red),
-                    onPressed: () async {
-                      final plainText = _textContentsController.text;
-                      final htmlText = _htmlContentsController.text;
-                      final data = RichClipboardData(
-                        text: plainText.isEmpty ? null : plainText,
-                        html: htmlText.isEmpty ? null : htmlText,
-                      );
-                      await RichClipboard.setData(data);
-                      await _refreshTypes();
-                    },
-                    child: const Text('Copy'),
-                  ),
-                  const Gap(40),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _refreshTypes();
-                      final data = await RichClipboard.getData();
-                      _htmlContentsController.text = data.html ?? 'NONE';
-                      _textContentsController.text = data.text ?? 'NONE';
-                    },
-                    child: const Text('Paste'),
-                  ),
-                ],
+              const Gap(40),
+              ElevatedButton(
+                onPressed: () async {
+                  await _refreshTypes();
+                  final data = await RichClipboard.getData();
+                  _htmlContentsController.text = data.html ?? '';
+                  _textContentsController.text = data.text ?? '';
+                },
+                child: const Text('Paste'),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
