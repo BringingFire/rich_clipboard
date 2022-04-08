@@ -8,24 +8,25 @@ const _kMimeTextHtml = 'text/html';
 
 final platformSupported = !kIsWeb && Platform.isMacOS;
 
-class RichClipboardData {
-  RichClipboardData({this.plainText, this.htmlText});
+class RichClipboardData implements ClipboardData {
+  RichClipboardData({this.text, this.html});
   RichClipboardData.fromMap(Map<String, String?> map)
       : this(
-          plainText: map[_kMimeTextPlain],
-          htmlText: map[_kMimeTextHtml],
+          text: map[_kMimeTextPlain],
+          html: map[_kMimeTextHtml],
         );
 
-  final String? plainText;
-  final String? htmlText;
+  @override
+  final String? text;
+  final String? html;
 
   Map<String, String?> toMap() => {
-        _kMimeTextPlain: plainText,
-        _kMimeTextHtml: htmlText,
+        _kMimeTextPlain: text,
+        _kMimeTextHtml: html,
       };
   @override
   String toString() =>
-      'RichClipboardData{ plainText: $plainText, htmlText: $htmlText }';
+      'RichClipboardData{ plainText: $text, htmlText: $html }';
 }
 
 class RichClipboard {
@@ -34,7 +35,7 @@ class RichClipboard {
   static Future<RichClipboardData> getData() async {
     if (!platformSupported) {
       final data = await Clipboard.getData(Clipboard.kTextPlain);
-      return RichClipboardData(plainText: data?.text);
+      return RichClipboardData(text: data?.text);
     }
 
     final data = await _channel
@@ -48,7 +49,7 @@ class RichClipboard {
 
   static Future<void> setData(RichClipboardData data) async {
     if (!platformSupported) {
-      await Clipboard.setData(ClipboardData(text: data.plainText));
+      await Clipboard.setData(ClipboardData(text: data.text));
     }
     await _channel.invokeMethod('RichClipboard.setData', data.toMap());
   }

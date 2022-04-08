@@ -108,8 +108,8 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
                       final plainText = _textContentsController.text;
                       final htmlText = _htmlContentsController.text;
                       final data = RichClipboardData(
-                        plainText: plainText.isEmpty ? null : plainText,
-                        htmlText: htmlText.isEmpty ? null : htmlText,
+                        text: plainText.isEmpty ? null : plainText,
+                        html: htmlText.isEmpty ? null : htmlText,
                       );
                       await RichClipboard.setData(data);
                       await _refreshTypes();
@@ -121,8 +121,8 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
                     onPressed: () async {
                       await _refreshTypes();
                       final data = await RichClipboard.getData();
-                      _htmlContentsController.text = data.htmlText ?? 'NONE';
-                      _textContentsController.text = data.plainText ?? 'NONE';
+                      _htmlContentsController.text = data.html ?? 'NONE';
+                      _textContentsController.text = data.text ?? 'NONE';
                     },
                     child: const Text('Paste'),
                   ),
