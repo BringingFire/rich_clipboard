@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rich_clipboard_example/pages/flutter_clipboard.dart';
 import 'package:rich_clipboard_example/pages/rich_clipboard.dart';
+import 'package:rich_clipboard_example/pages/super_editor.dart';
 import 'package:rich_clipboard_example/pages/widgets_from_html.dart';
 
 void main() {
@@ -26,25 +27,40 @@ class _MyAppState extends State<MyApp> {
 class _MenuItem {
   final IconData icon;
   final String title;
+  final String subtitle;
   final WidgetBuilder builder;
 
-  _MenuItem({required this.icon, required this.title, required this.builder});
+  _MenuItem({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.builder,
+  });
 }
 
 final _menu = <_MenuItem>[
   _MenuItem(
     icon: Icons.attach_money,
     title: 'Rich clipboard',
+    subtitle: 'Inspect and modify clipboard contents',
     builder: (context) => const RichClipboardPage(),
+  ),
+  _MenuItem(
+    icon: Icons.edit,
+    title: 'Super Editor',
+    subtitle: 'A rich text editor, extended with rich clipboard support',
+    builder: (context) => const SuperEditorPage(),
   ),
   _MenuItem(
     icon: Icons.build,
     title: 'Widgets from html',
+    subtitle: 'Paste html from the clipboard as widgets',
     builder: (context) => const WidgetsFromHtmlPage(),
   ),
   _MenuItem(
     icon: Icons.paste,
     title: 'Flutter clipboard',
+    subtitle: 'Builtin clipboard behavior for comparison',
     builder: (context) => const FlutterClipboardPage(),
   ),
 ];
@@ -79,6 +95,7 @@ class _HomePageState extends State<HomePage> {
               return ListTile(
                 leading: Icon(item.icon),
                 title: Text(item.title),
+                subtitle: Text(item.subtitle),
                 onTap: () => setState(() {
                   _activeIndex = index;
                 }),

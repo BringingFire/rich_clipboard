@@ -46,7 +46,7 @@ class _FlutterClipboardPageState extends State<FlutterClipboardPage> {
                 controller: _controller,
                 minLines: 1,
                 maxLines: 12,
-                enabled: false,
+                readOnly: true,
                 style: theme.textTheme.bodyText2!
                     .copyWith(fontFamily: 'monospace'),
                 decoration: const InputDecoration(
@@ -59,7 +59,7 @@ class _FlutterClipboardPageState extends State<FlutterClipboardPage> {
                   final data = await Clipboard.getData(Clipboard.kTextPlain);
                   _controller.text = data?.text ?? '';
                 },
-                child: const Text('Fetch clipboard'),
+                child: const Text('Paste'),
               ),
             ],
           ),
