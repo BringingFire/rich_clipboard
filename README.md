@@ -1,15 +1,35 @@
 # rich_clipboard
 
-A new flutter plugin project.
+A Flutter plugin providing access to additional data types in the system
+clipboard.
 
-## Getting Started
+## Platform Support
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+macOS | Windows | Linux | Android | iOS
+:----:|:-------:|:-----:|:-------:|:---:
+ ✅   | ❌       | ❌     | ❌    | ❌
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
 
+You can use static methods on the `RichClipboard` class to access data
+in the system clipboard. The API is similar to that provided by Flutter's
+built-in `Clipboard` class.
+
+```dart
+import 'package:rich_clipboard/rich_clipboard.dart';
+...
+final clipboardData = await RichClipboard.getData();
+if (clipboardData.html != null) {
+  // Do something with HTML
+} else if (clipboardData.text != null) {
+  // Do something with plain text
+}
+...
+
+final plainText = 'Hello there';
+final html = '<html><body><h1>$plainText</h1></body></html>';
+await RichClipboard.setData(RichClipboardData({
+  text: plainText,
+  html: html,
+}));
+```
