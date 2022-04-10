@@ -27,14 +27,16 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    func getData() -> [String: String?] {
+    public func getData() -> [String: String] {
         let board = NSPasteboard.general
-        let text = board.string(forType: .string)
-        let html = board.string(forType: .html) ?? getRtfAsHtml()
-        return [
-            mimeTextPlain: text,
-            mimeTextHtml: html,
-        ]
+        var result: [String: String] = [:]
+        if let text = board.string(forType: .string) {
+            result[mimeTextPlain] = text
+        }
+        if let html = board.string(forType: .html) ?? getRtfAsHtml() {
+            result[mimeTextHtml] = html
+        }
+        return result
     }
 
     func setData(_ arguments: Any?) {
