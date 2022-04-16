@@ -27,7 +27,10 @@ void main() {
           html = args[RichClipboard.kTextHtml] as String?;
           break;
         default:
-          throw UnimplementedError(methodCall.method);
+          throw PlatformException(
+            code: 'ERR_METHOD_UNIMPLEMENTED',
+            message: 'Unimplemented method ${methodCall.method}',
+          );
       }
       return null;
     });
