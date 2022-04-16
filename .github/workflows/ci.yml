@@ -1,0 +1,47 @@
+name: CI
+
+env:
+  FLUTTER_CHANNEL: stable
+
+on:
+  push:
+   branches: [ dev ]
+   paths:
+    - 'lib/**/*'
+    - 'test/**/*'
+    - '*.yml'
+    - '*.yaml'
+    - 'pubspec.lock'
+  pull_request: {}
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Verify formatting
+        run: flutter format --output=none --set-exit-if-changed .
+
+      - name: Analyze code
+        run: flutter analyze
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup
+        uses: ./.github/actions/setup
+      
+      - name: Run tests
+        run: flutter test

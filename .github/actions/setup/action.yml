@@ -1,0 +1,50 @@
+name: Setup
+description: Setup the project with Flutter and install dependencies
+
+inputs:
+  flutter-channel:
+    required: false
+    default: stable
+    description: The Flutter channel to use. Accepts stable, beta, dev, or master.
+  skip-compile-deps:
+    required: false
+    default: 'false'
+    description: Whether to skip installing tools such as cmake and ninja.
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: ${{ inputs.flutter-channel }}
+        cache: true
+        cache-key: flutter
+        cache-path: ${{ runner.tool_cache }}/flutter
+    
+    - name: Install linux build tools
+      if: ${{ runner.os == 'Linux' && inputs.skip-compile-deps != 'true' }}
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+    
+    - name: Enable Flutter desktop
+      shell: bash
+      run: |
+        flutter config --enable-linux-desktop
+        flutter config --enable-windows-desktop
+        flutter config --enable-macos-desktop
+
+    - name: Cache dependencies
+      uses: actions/cache@v2
+      with:
+        path: ${{ env.PUB_CACHE }}
+        key: pub-cache-${{ hashFiles('pubspec.lock') }}
+        restore-keys: |
+          pub-cache-${{ hashFiles('pubspec.lock') }}
+          pub-cache-
+    
+    - name: Install dependencies
+      shell: bash
+      run: flutter pub get
