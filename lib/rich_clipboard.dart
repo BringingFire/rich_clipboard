@@ -51,7 +51,7 @@ class RichClipboard {
     final data = await _channel
         .invokeMapMethod<String, String?>('RichClipboard.getData');
     if (data == null) {
-      return RichClipboardData();
+      return const RichClipboardData();
     }
 
     return RichClipboardData.fromMap(data);

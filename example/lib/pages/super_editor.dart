@@ -21,7 +21,7 @@ class _SuperEditorPageState extends State<SuperEditorPage> {
   @override
   void initState() {
     super.initState();
-    final doc = deserializeMarkdownToDocument(STARTER_DOC);
+    final doc = deserializeMarkdownToDocument(starterDoc);
     _editor = DocumentEditor(document: doc);
   }
 
@@ -53,7 +53,7 @@ class _SuperEditorPageState extends State<SuperEditorPage> {
                 setState(() {
                   final oldDoc = _editor.document;
                   _editor = DocumentEditor(
-                      document: deserializeMarkdownToDocument(STARTER_DOC));
+                      document: deserializeMarkdownToDocument(starterDoc));
                   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
                     oldDoc.dispose();
                   });
@@ -172,11 +172,8 @@ class _PasteEditorCommand implements EditorCommand {
     DocumentPosition? newSelectionPosition;
 
     if (currentNodeWithSelection is TextNode) {
-      final textNode = document.getNode(_pastePosition) as TextNode;
       final pasteTextOffset =
           (_pastePosition.nodePosition as TextPosition).offset;
-      final attributionsAtPasteOffset =
-          textNode.text.getAllAttributionsAt(pasteTextOffset);
 
       if (currentNodeWithSelection is ParagraphNode) {
         SplitParagraphCommand(
@@ -230,7 +227,7 @@ class _PasteEditorCommand implements EditorCommand {
   }
 }
 
-const STARTER_DOC = '''
+const starterDoc = '''
 # Header 1
 
 ## Header 2
