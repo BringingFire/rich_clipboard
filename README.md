@@ -1,5 +1,7 @@
 # rich_clipboard
 
+[![CI](https://github.com/BringingFire/rich_clipboard/actions/workflows/ci.yml/badge.svg)](https://github.com/BringingFire/rich_clipboard/actions/workflows/ci.yml)
+
 A Flutter plugin providing access to additional data types in the system
 clipboard.
 
