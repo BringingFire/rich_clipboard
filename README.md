@@ -11,9 +11,10 @@ macOS | Windows | Linux | Android | iOS
 
 ## Usage
 
-You can use static methods on the `RichClipboard` class to access data
-in the system clipboard. The API is similar to that provided by Flutter's
-built-in `Clipboard` class.
+You can use static methods on the `RichClipboard` class to access data in the
+system clipboard. The API is similar to that provided by Flutter's built-in
+[`Clipboard`](https://api.flutter.dev/flutter/services/Clipboard-class.html)
+class.
 
 ```dart
 import 'package:rich_clipboard/rich_clipboard.dart';
