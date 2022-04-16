@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-final platformSupported = !kIsWeb && Platform.isMacOS;
+final platformSupported = Platform.environment.containsKey('FLUTTER_TEST') ||
+    (!kIsWeb && Platform.isMacOS);
 
 /// Data from the system clipboard.
 class RichClipboardData implements ClipboardData {
