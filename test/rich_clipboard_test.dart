@@ -11,7 +11,8 @@ void main() {
   String? html;
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (methodCall) async {
       switch (methodCall.method) {
         case 'RichClipboard.getData':
           return html == null && text == null
@@ -28,6 +29,7 @@ void main() {
         default:
           throw UnimplementedError(methodCall.method);
       }
+      return null;
     });
   });
 
