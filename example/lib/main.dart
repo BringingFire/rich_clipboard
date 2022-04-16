@@ -81,12 +81,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(_menu[_activeIndex].title),
       ),
-      drawer: _drawer,
+      drawer: Builder(builder: _drawer),
       body: _menu[_activeIndex].builder(context),
     );
   }
 
-  Widget get _drawer => Drawer(
+  Widget _drawer(BuildContext context) => Drawer(
         child: ListView(
           children: List.generate(
             _menu.length,
@@ -98,6 +98,7 @@ class _HomePageState extends State<HomePage> {
                 subtitle: Text(item.subtitle),
                 onTap: () => setState(() {
                   _activeIndex = index;
+                  Navigator.of(context).pop();
                 }),
                 selected: index == _activeIndex,
                 selectedTileColor: Colors.grey.shade300,
