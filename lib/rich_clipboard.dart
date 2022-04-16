@@ -3,18 +3,15 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-const _kMimeTextPlain = 'text/plain';
-const _kMimeTextHtml = 'text/html';
-
 final platformSupported = !kIsWeb && Platform.isMacOS;
 
 /// Data from the system clipboard.
 class RichClipboardData implements ClipboardData {
-  RichClipboardData({this.text, this.html});
+  const RichClipboardData({this.text, this.html});
   RichClipboardData.fromMap(Map<String, String?> map)
       : this(
-          text: map[_kMimeTextPlain],
-          html: map[_kMimeTextHtml],
+          text: map[RichClipboard.kTextPlain],
+          html: map[RichClipboard.kTextHtml],
         );
 
   @override
@@ -22,8 +19,8 @@ class RichClipboardData implements ClipboardData {
   final String? html;
 
   Map<String, String?> toMap() => {
-        _kMimeTextPlain: text,
-        _kMimeTextHtml: html,
+        RichClipboard.kTextPlain: text,
+        RichClipboard.kTextHtml: html,
       };
 
   @override
@@ -33,6 +30,9 @@ class RichClipboardData implements ClipboardData {
 /// Utility methods for interacting with the systems clipboard with support for
 /// various data formats.
 class RichClipboard {
+  static const kTextPlain = Clipboard.kTextPlain;
+  static const kTextHtml = 'text/html';
+
   // Prevent instantiation or extension
   RichClipboard._();
 
