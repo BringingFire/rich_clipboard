@@ -10,6 +10,7 @@ const _kTextPlain = 'text/plain';
 const _kTextHtml = 'text/html';
 
 /// Data from the system clipboard.
+@immutable
 class RichClipboardData implements ClipboardData {
   const RichClipboardData({this.text, this.html});
   RichClipboardData.fromMap(Map<String, String?> map)
