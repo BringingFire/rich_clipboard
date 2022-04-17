@@ -28,7 +28,7 @@ class RichClipboardData implements ClipboardData {
   String toString() => 'RichClipboardData{ plainText: $text, htmlText: $html }';
 }
 
-/// Utility methods for interacting with the systems clipboard with support for
+/// Utility methods for interacting with the system's clipboard with support for
 /// various data formats.
 class RichClipboard {
   static const kTextPlain = Clipboard.kTextPlain;
