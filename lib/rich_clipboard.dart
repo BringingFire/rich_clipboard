@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-final platformSupported = Platform.environment.containsKey('FLUTTER_TEST') ||
-    (!kIsWeb && Platform.isMacOS);
+final _platformSupported = !kIsWeb &&
+    (Platform.environment.containsKey('FLUTTER_TEST') || Platform.isMacOS);
 
 /// Data from the system clipboard.
 class RichClipboardData implements ClipboardData {
@@ -44,7 +44,7 @@ class RichClipboard {
   /// Returns a future which completes to a [RichClipboardData] containing all
   /// available formats that were found in the clipboard.
   static Future<RichClipboardData> getData() async {
-    if (!platformSupported) {
+    if (!_platformSupported) {
       final data = await Clipboard.getData(Clipboard.kTextPlain);
       return RichClipboardData(text: data?.text);
     }
@@ -73,7 +73,7 @@ class RichClipboard {
   /// dependent and likely do not conform to anything easily usable like MIME
   /// types.
   static Future<List<String>> getAvailableTypes() async {
-    if (!platformSupported) {
+    if (!_platformSupported) {
       return [];
     }
     final List<String>? result =
