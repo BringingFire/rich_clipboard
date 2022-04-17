@@ -2,6 +2,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rich_clipboard/rich_clipboard.dart';
 
+const _kTextPlain = 'text/plain';
+const _kTextHtml = 'text/html';
+
 void main() {
   const MethodChannel channel = MethodChannel('rich_clipboard');
 
@@ -18,13 +21,13 @@ void main() {
           return html == null && text == null
               ? null
               : {
-                  RichClipboard.kTextHtml: html,
-                  RichClipboard.kTextPlain: text,
+                  _kTextHtml: html,
+                  _kTextPlain: text,
                 };
         case 'RichClipboard.setData':
           final args = (methodCall.arguments as Map<Object?, Object?>);
-          text = args[RichClipboard.kTextPlain] as String?;
-          html = args[RichClipboard.kTextHtml] as String?;
+          text = args[_kTextPlain] as String?;
+          html = args[_kTextHtml] as String?;
           break;
         default:
           throw PlatformException(
