@@ -21,15 +21,21 @@ class RichClipboardData implements ClipboardData {
 
   @override
   final String? text;
+
+  /// HTML variant of this clipboard data.
   final String? html;
 
+  /// Convert this object to a map of MIME types to strings.
+  ///
+  /// This is primarily a convenience method for passing [RichClipboardData]
+  /// instances across a Flutter [MethodChannel].
   Map<String, String?> toMap() => {
         _kTextPlain: text,
         _kTextHtml: html,
       };
 
   @override
-  String toString() => 'RichClipboardData{ plainText: $text, htmlText: $html }';
+  String toString() => 'RichClipboardData{ text: $text, html: $html }';
 }
 
 /// Utility methods for interacting with the system's clipboard with support for
@@ -44,8 +50,8 @@ class RichClipboard {
   /// Retrieves data from the system clipboard in supported formats.
   ///
   /// Platform code may convert from unsupported formats to provide data when it
-  /// is not available in a supported format. For example, if no html is
-  /// available in the clipboard but rtf is, that rtf will be converted to html
+  /// is not available in a supported format. For example, if no HTML is
+  /// available in the clipboard but RTF is, that RTF will be converted to HTML
   /// which will then be included in the returned data.
   ///
   /// Returns a future which completes to a [RichClipboardData].
@@ -76,9 +82,8 @@ class RichClipboard {
   /// Retrieves a list of strings representing the data types available in the
   /// system clipboard.
   ///
-  /// This method is primarily useful for debugging. The strings are platform
-  /// dependent and likely do not conform to anything easily usable like MIME
-  /// types.
+  /// This method is primarily useful for debugging as the strings are platform
+  /// dependent.
   ///
   /// Returns a future that completes to a list of strings. If no data is
   /// available in the system clipboard then the future will resolve to an empty
