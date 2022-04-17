@@ -6,19 +6,19 @@ let mimeTextHtml = "text/html"
 
 public class RichClipboardPlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "rich_clipboard", binaryMessenger: registrar.messenger)
+        let channel = FlutterMethodChannel(name: "com.bringingfire.rich_clipboard", binaryMessenger: registrar.messenger)
         let instance = RichClipboardPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
-        case "RichClipboard.getData":
+        case "getData":
             result(getData())
-        case "RichClipboard.setData":
+        case "setData":
             setData(call.arguments)
             result(nil)
-        case "RichClipboard.getAvailableTypes":
+        case "getAvailableTypes":
             result(getAvailableTypes())
         default:
             result(FlutterMethodNotImplemented)

@@ -17,7 +17,7 @@ class RunnerTests: XCTestCase {
         NSPasteboard.general.setString(textContent, forType: .string)
         var resultDict: [String: String]?
         plugin.handle(
-            FlutterMethodCall(methodName: "RichClipboard.getData", arguments: nil),
+            FlutterMethodCall(methodName: "getData", arguments: nil),
             result: { (result: Any?) in
                 resultDict = (result as? [String: String])!
             }
@@ -40,7 +40,7 @@ class RunnerTests: XCTestCase {
         NSPasteboard.general.setString(htmlContent, forType: .html)
         var resultDict: [String: String?]?
         plugin.handle(
-            FlutterMethodCall(methodName: "RichClipboard.getData", arguments: nil),
+            FlutterMethodCall(methodName: "getData", arguments: nil),
             result: { (result: Any?) in
                 resultDict = (result as? [String: String?])!
             }
@@ -73,7 +73,7 @@ class RunnerTests: XCTestCase {
         NSPasteboard.general.setString(rtfContent, forType: .rtf)
         var resultDict: [String: String]?
         plugin.handle(
-            FlutterMethodCall(methodName: "RichClipboard.getData", arguments: nil),
+            FlutterMethodCall(methodName: "getData", arguments: nil),
             result: { (result: Any?) in
                 resultDict = (result as? [String: String])!
             }

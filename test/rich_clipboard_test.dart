@@ -6,7 +6,8 @@ const _kTextPlain = 'text/plain';
 const _kTextHtml = 'text/html';
 
 void main() {
-  const MethodChannel channel = MethodChannel('rich_clipboard');
+  const MethodChannel channel =
+      MethodChannel('com.bringingfire.rich_clipboard');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,14 +18,14 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance!.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (methodCall) async {
       switch (methodCall.method) {
-        case 'RichClipboard.getData':
+        case 'getData':
           return html == null && text == null
               ? null
               : {
                   _kTextHtml: html,
                   _kTextPlain: text,
                 };
-        case 'RichClipboard.setData':
+        case 'setData':
           final args = (methodCall.arguments as Map<Object?, Object?>);
           text = args[_kTextPlain] as String?;
           html = args[_kTextHtml] as String?;
@@ -32,7 +33,7 @@ void main() {
         default:
           throw PlatformException(
             code: 'ERR_METHOD_UNIMPLEMENTED',
-            message: 'Unimplemented method ${methodCall.method}',
+            message: 'Unimplemented method "${methodCall.method}"',
           );
       }
       return null;

@@ -38,7 +38,8 @@ class RichClipboard {
   // Prevent instantiation or extension
   RichClipboard._();
 
-  static const MethodChannel _channel = MethodChannel('rich_clipboard');
+  static const MethodChannel _channel =
+      MethodChannel('com.bringingfire.rich_clipboard');
 
   /// Retrieves data from the clipboard.
   ///
@@ -51,7 +52,7 @@ class RichClipboard {
     }
 
     final data = await _channel
-        .invokeMapMethod<String, String?>('RichClipboard.getData');
+        .invokeMapMethod<String, String?>('getData');
     if (data == null) {
       return const RichClipboardData();
     }
@@ -64,7 +65,7 @@ class RichClipboard {
     if (!_platformSupported) {
       await Clipboard.setData(ClipboardData(text: data.text));
     }
-    await _channel.invokeMethod('RichClipboard.setData', data.toMap());
+    await _channel.invokeMethod('setData', data.toMap());
   }
 
   /// Returns a list of strings representing the data types available in the
@@ -78,7 +79,7 @@ class RichClipboard {
       return [];
     }
     final List<String>? result =
-        await _channel.invokeListMethod('RichClipboard.getAvailableTypes');
+        await _channel.invokeListMethod('getAvailableTypes');
     return result ?? [];
   }
 }
