@@ -41,18 +41,21 @@ class RichClipboard {
   static const MethodChannel _channel =
       MethodChannel('com.bringingfire.rich_clipboard');
 
-  /// Retrieves data from the clipboard.
+  /// Retrieves data from the system clipboard in supported formats.
   ///
-  /// Returns a future which completes to a [RichClipboardData] containing all
-  /// available formats that were found in the clipboard.
+  /// Platform code may convert from unsupported formats to provide data when it
+  /// is not available in a supported format. For example, if no html is
+  /// available in the clipboard but rtf is, that rtf will be converted to html
+  /// which will then be included in the returned data.
+  ///
+  /// Returns a future which completes to a [RichClipboardData].
   static Future<RichClipboardData> getData() async {
     if (!_platformSupported) {
       final data = await Clipboard.getData(Clipboard.kTextPlain);
       return RichClipboardData(text: data?.text);
     }
 
-    final data = await _channel
-        .invokeMapMethod<String, String?>('getData');
+    final data = await _channel.invokeMapMethod<String, String?>('getData');
     if (data == null) {
       return const RichClipboardData();
     }
@@ -60,7 +63,9 @@ class RichClipboard {
     return RichClipboardData.fromMap(data);
   }
 
-  /// Clears the system clipboard and then stores the provided data.
+  /// Stores the provided data in the system clipboard.
+  ///
+  /// To just clear the clipboard, pass an empty [RichClipboardData].
   static Future<void> setData(RichClipboardData data) async {
     if (!_platformSupported) {
       await Clipboard.setData(ClipboardData(text: data.text));
@@ -68,12 +73,16 @@ class RichClipboard {
     await _channel.invokeMethod('setData', data.toMap());
   }
 
-  /// Returns a list of strings representing the data types available in the
+  /// Retrieves a list of strings representing the data types available in the
   /// system clipboard.
   ///
-  /// Primarily useful for debugging. The returned strings are platform
+  /// This method is primarily useful for debugging. The strings are platform
   /// dependent and likely do not conform to anything easily usable like MIME
   /// types.
+  ///
+  /// Returns a future that completes to a list of strings. If no data is
+  /// available in the system clipboard then the future will resolve to an empty
+  /// list.
   static Future<List<String>> getAvailableTypes() async {
     if (!_platformSupported) {
       return [];
