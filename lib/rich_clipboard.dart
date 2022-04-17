@@ -60,17 +60,10 @@ class RichClipboard {
 
   /// Clears the system clipboard and then stores the provided data.
   static Future<void> setData(RichClipboardData data) async {
-    if (!platformSupported) {
+    if (!_platformSupported) {
       await Clipboard.setData(ClipboardData(text: data.text));
     }
     await _channel.invokeMethod('RichClipboard.setData', data.toMap());
-  }
-
-  static Future<int> getItemCount() async {
-    if (!platformSupported) {
-      return -1;
-    }
-    return await _channel.invokeMethod('RichClipboard.getItemCount');
   }
 
   /// Returns a list of strings representing the data types available in the

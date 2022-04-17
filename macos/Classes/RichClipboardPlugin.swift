@@ -18,8 +18,6 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         case "RichClipboard.setData":
             setData(call.arguments)
             result(nil)
-        case "RichClipboard.getItemCount":
-            result(getItemCount())
         case "RichClipboard.getAvailableTypes":
             result(getAvailableTypes())
         default:
@@ -72,10 +70,6 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
             return nil
         }
         return String(data: htmlData, encoding: String.Encoding.utf8)
-    }
-
-    func getItemCount() -> Int {
-        NSPasteboard.general.pasteboardItems?.count ?? 0
     }
 
     func getAvailableTypes() -> [String] {
