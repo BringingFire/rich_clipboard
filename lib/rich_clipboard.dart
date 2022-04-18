@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 final _platformSupported = !kIsWeb &&
-    (Platform.environment.containsKey('FLUTTER_TEST') || Platform.isMacOS);
+    (Platform.environment.containsKey('FLUTTER_TEST') ||
+        Platform.isMacOS ||
+        Platform.isWindows);
 
 const _kTextPlain = 'text/plain';
 const _kTextHtml = 'text/html';
