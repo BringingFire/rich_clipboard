@@ -1,7 +1,8 @@
 name: rich_clipboard
 description: Access rich text and other data types in the system clipboard.
 version: 0.0.1
-# homepage:
+homepage: https://github.com/bringingfire/rich_clipboard
+repository: https://github.com/bringingfire/rich_clipboard
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
