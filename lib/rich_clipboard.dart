@@ -71,7 +71,7 @@ class RichClipboard {
 
   /// Stores the provided data in the system clipboard.
   ///
-  /// To just clear the clipboard, pass an empty [RichClipboardData].
+  /// To clear the clipboard pass an empty [RichClipboardData].
   static Future<void> setData(RichClipboardData data) async {
     if (!_platformSupported) {
       await Clipboard.setData(ClipboardData(text: data.text));
