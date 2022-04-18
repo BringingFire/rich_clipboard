@@ -36,7 +36,7 @@ void RichClipboardPlugin::RegisterWithRegistrar(
     flutter::PluginRegistrarWindows *registrar) {
   auto channel =
       std::make_unique<flutter::MethodChannel<flutter::EncodableValue>>(
-          registrar->messenger(), "rich_clipboard",
+          registrar->messenger(), "com.bringingfire.rich_clipboard",
           &flutter::StandardMethodCodec::GetInstance());
 
   auto plugin = std::make_unique<RichClipboardPlugin>();
@@ -67,9 +67,31 @@ void RichClipboardPlugin::HandleMethodCall(
       version_stream << "7";
     }
     result->Success(flutter::EncodableValue(version_stream.str()));
-  } else {
-    result->NotImplemented();
+    return;
   }
+
+  if (method_call.method_name().compare("getAvailableTypes") == 0)
+  {
+    if (!OpenClipboard(NULL))
+    {
+      result->Error("COULD_NOT_OPEN_CLIPBOARD", "Failed to open clipboard");
+      return;
+    }
+
+    flutter::EncodableList availableTypes;
+    auto nextType = EnumClipboardFormats(NULL);
+    while (nextType != NULL)
+    {
+      availableTypes.push_back(flutter::EncodableValue(std::to_string(nextType)));
+      nextType = EnumClipboardFormats(nextType);
+    }
+
+    CloseClipboard();
+    result->Success(availableTypes);
+    return;
+  }
+
+  result->NotImplemented();
 }
 
 }  // namespace
