@@ -11,6 +11,11 @@ macOS | Windows | Linux | Android | iOS
 :----:|:-------:|:-----:|:-------:|:---:
  ✅   | ❌       | ❌     | ❌    | ❌
 
+## Warning: Alpha Software
+
+This is an alpha package. The API can and likely will go through some revisions
+as support is added for more platforms.
+
 ## Usage
 
 You can use static methods on the `RichClipboard` class to access data in the
