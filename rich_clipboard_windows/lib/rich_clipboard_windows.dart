@@ -3,7 +3,6 @@ library rich_clipboard_windows;
 import 'dart:convert' show utf8;
 import 'dart:ffi';
 
-import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
@@ -28,20 +27,24 @@ class RichClipboardWindows extends RichClipboardPlatform {
       return __cfHtml;
     }
 
-    if (win32.OpenClipboard(win32.NULL) == win32.FALSE) {
+    int formatId = 0;
+    using((arena) {
+      final formatStringUnits = _kHtmlFormat.codeUnits;
+      final formatStringPtr = arena
+          .allocate<Uint16>(sizeOf<Uint16>() * (formatStringUnits.length + 1));
+      for (var i = 0; i < formatStringUnits.length; i++) {
+        formatStringPtr[i] = formatStringUnits[i];
+      }
+      formatStringPtr[formatStringUnits.length] = win32.NULL;
+      formatId = win32.RegisterClipboardFormat(formatStringPtr.cast<Utf16>());
+    });
+
+    if (formatId == 0) {
       return null;
     }
 
-    final formats = _getFormats();
-
-    final htmlFormat =
-        formats.firstWhereOrNull((cf) => cf.name == _kHtmlFormat);
-    if (htmlFormat == null) {
-      return null;
-    }
-
-    __cfHtml = htmlFormat.format;
-    return __cfHtml!;
+    __cfHtml = formatId;
+    return _cfHtml;
   }
 
   /// Registers the Windows implementation.
@@ -120,6 +123,9 @@ class RichClipboardWindows extends RichClipboardPlatform {
     if (data.text != null) {
       _setWin32ClipboardString(win32.CF_UNICODETEXT, data.text!);
     }
+    if (data.html != null) {
+      _setWin32ClipboardString(_kCFHtml, data.html!);
+    }
 
     win32.CloseClipboard();
   }
@@ -146,7 +152,11 @@ void _setWin32ClipboardString(int format, String text) {
   win32.SetClipboardData(format, memHandle);
 }
 
-String? _getWin32ClipboardString(List<int> formats, {bool ascii = false}) {
+String? _getWin32ClipboardString(
+  List<int> formats, {
+  bool utf16 = true,
+  bool html = false,
+}) {
   int chosenFormat = -1;
   using((arena) {
     final formatsPtr = arena.allocate<Uint32>(formats.length);
@@ -175,14 +185,14 @@ String? _getWin32ClipboardString(List<int> formats, {bool ascii = false}) {
   }
 
   final String fullStr;
-  if (ascii) {
-    fullStr = rawPtr.cast<Utf8>().toDartString();
-  } else {
+  if (utf16) {
     fullStr = rawPtr.cast<Utf16>().toDartString();
+  } else {
+    fullStr = rawPtr.cast<Utf8>().toDartString();
   }
   win32.GlobalUnlock(handle);
 
-  if (!ascii) {
+  if (!html) {
     return fullStr;
   }
 
