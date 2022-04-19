@@ -82,20 +82,32 @@ class RichClipboardWindows extends RichClipboardPlatform {
     win32.EmptyClipboard();
 
     if (data.text != null) {
-      final textUtf16 = data.text!.codeUnits;
-      final alloc = win32.GlobalAlloc(
-          _kGMemMovable, (textUtf16.length + 1) * sizeOf<Uint16>());
-      final handle = win32.GlobalLock(alloc).cast<Uint16>();
-      for (var i = 0; i < textUtf16.length; i++) {
-        handle.elementAt(i).value = textUtf16[i];
-      }
-      handle.elementAt(textUtf16.length).value = 0x0;
-      win32.GlobalUnlock(alloc);
-      win32.SetClipboardData(win32.CF_UNICODETEXT, alloc);
+      _setWin32ClipboardString(win32.CF_UNICODETEXT, data.text!);
     }
 
     win32.CloseClipboard();
   }
+}
+
+void _setWin32ClipboardString(int format, String text) {
+  final textUtf16 = text.codeUnits;
+
+  final memHandle = win32.GlobalAlloc(
+    _kGMemMovable,
+    (textUtf16.length + 1) * sizeOf<Uint16>(),
+  );
+  if (memHandle == win32.NULL) {
+    return;
+  }
+
+  final utf16Ptr = win32.GlobalLock(memHandle).cast<Uint16>();
+  for (var i = 0; i < textUtf16.length; i++) {
+    utf16Ptr.elementAt(i).value = textUtf16[i];
+  }
+  utf16Ptr.elementAt(textUtf16.length).value = 0x0;
+
+  win32.GlobalUnlock(memHandle);
+  win32.SetClipboardData(format, memHandle);
 }
 
 String? _getWin32ClipboardString(List<int> formats, {bool ascii = false}) {
