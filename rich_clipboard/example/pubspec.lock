@@ -142,7 +142,7 @@ packages:
     source: hosted
     version: "0.17.1"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
@@ -587,6 +587,27 @@ packages:
     dependency: "direct main"
     description:
       path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
+  rich_clipboard_macos:
+    dependency: "direct overridden"
+    description:
+      path: "../../rich_clipboard_macos"
+      relative: true
+    source: path
+    version: "0.0.1"
+  rich_clipboard_platform_interface:
+    dependency: "direct overridden"
+    description:
+      path: "../../rich_clipboard_platform_interface"
+      relative: true
+    source: path
+    version: "0.0.1"
+  rich_clipboard_windows:
+    dependency: "direct overridden"
+    description:
+      path: "../../rich_clipboard_windows"
       relative: true
     source: path
     version: "0.0.1"

@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  rich_clipboard
   url_launcher_windows
 )
 

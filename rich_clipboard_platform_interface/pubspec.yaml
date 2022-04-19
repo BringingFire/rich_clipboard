@@ -1,0 +1,18 @@
+name: rich_clipboard_platform_interface
+description: A common platform interface for the rich_clipboard plugin.
+homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_platform_interface
+repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_platform_interface
+version: 0.0.1
+
+environment:
+  sdk: ">=2.16.1 <3.0.0"
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
