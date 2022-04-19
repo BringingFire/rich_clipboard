@@ -1,6 +1,5 @@
 library rich_clipboard_windows;
 
-import 'dart:convert' show utf8;
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -8,11 +7,11 @@ import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
 import 'package:win32/win32.dart' as win32;
 
+import 'src/html_utilities.dart';
+
 const _kGMemMovable = 0x0002;
 
 const _kHtmlFormat = 'HTML Format';
-const _kStartFragmentComment = '<!--StartFragment-->';
-const _kEndFragmentComment = '<!--EndFragment-->';
 
 class _ClipboardFormat {
   final int format;
@@ -105,7 +104,7 @@ class RichClipboardWindows extends RichClipboardPlatform {
       if (cfHtml != null) {
         html = _getWin32ClipboardString(cfHtml, isUtf8: true);
         if (html != null) {
-          html = _stripWin32HtmlDescription(html);
+          html = stripWin32HtmlDescription(html);
         }
       }
     } finally {
@@ -145,26 +144,9 @@ class RichClipboardWindows extends RichClipboardPlatform {
       return;
     }
 
-    // Windows wants these marker comments in the HTML, and future parts of our
-    // code relies on them being present. It's probably technically incorrect
-    // to just wrap the entire body since that could include things like meta
-    // tags, but it works for Google Docs so it's good enough for us.
-    if (!html.contains(_kStartFragmentComment)) {
-      final startBodyIndex = html.indexOf('<body>') + '<body>'.length;
-      html = html.substring(0, startBodyIndex) +
-          _kStartFragmentComment +
-          html.substring(startBodyIndex);
-    }
-    if (!html.contains(_kEndFragmentComment)) {
-      final endBodyIndex = html.indexOf('</body>');
-      html = html.substring(0, endBodyIndex) +
-          _kEndFragmentComment +
-          html.substring(endBodyIndex);
-    }
+    final htmlCodeUnits = constructWin32HtmlClipboardData(html);
 
-    final htmlTemplateUnits = _templateWin32HtmlClipboardData(html);
-
-    _setWin32ClipboardStringByUnits(cfHtml, htmlTemplateUnits, isUtf8: true);
+    _setWin32ClipboardStringByUnits(cfHtml, htmlCodeUnits, isUtf8: true);
   }
 }
 
@@ -227,17 +209,6 @@ String? _getWin32ClipboardString(int format, {bool isUtf8 = false}) {
   return resultString;
 }
 
-String _stripWin32HtmlDescription(String html) {
-  // The description has a StartHTML field we could use to calculate this
-  // instead, but it's in terms of byte offset so is annoying to work with
-  // once we already converted back to a Dart string, and since it's generated
-  // in application code it could just contain garbage anyway.
-  final startHtml = html.indexOf('<html');
-  final htmlStr = html.substring(startHtml < 0 ? 0 : startHtml);
-
-  return htmlStr;
-}
-
 const _win32CfToStrFallback = <int, String>{
   win32.CF_TEXT: 'CF_TEXT',
   win32.CF_BITMAP: 'CF_BITMAP',
@@ -266,46 +237,3 @@ const _win32CfToStrFallback = <int, String>{
   win32.CF_GDIOBJFIRST: 'CF_GDIOBJFIRST',
   win32.CF_GDIOBJLAST: 'CF_GDIOBJLAST',
 };
-
-List<int> _templateWin32HtmlClipboardData(String html) {
-  const descTemplate = '''
-Version:0.9
-StartHTML:0000000000
-EndHTML:0000000000
-StartFragment:0000000000
-EndFragment:0000000000
-''';
-  final descUtf8Len = utf8.encode(descTemplate).length;
-  final htmlUtf8 = utf8.encode(html);
-  final htmlStart = descUtf8Len;
-  final htmlEnd = descUtf8Len + htmlUtf8.length;
-  final fragmentStart = descUtf8Len +
-      utf8
-          .encode(html.substring(0, html.indexOf(_kStartFragmentComment)))
-          .length +
-      utf8.encode(_kStartFragmentComment).length;
-  final fragmentEnd = descUtf8Len +
-      utf8
-          .encode(html.substring(0, html.lastIndexOf(_kEndFragmentComment)))
-          .length;
-  final desc = descTemplate
-      .replaceAll(
-        'StartHTML:0000000000',
-        'StartHTML:${htmlStart.toString().padLeft(10, '0')}',
-      )
-      .replaceAll(
-        'EndHTML:0000000000',
-        'EndHTML:${htmlEnd.toString().padLeft(10, '0')}',
-      )
-      .replaceAll(
-        'StartFragment:0000000000',
-        'StartFragment:${fragmentStart.toString().padLeft(10, '0')}',
-      )
-      .replaceAll(
-        'EndFragment:0000000000',
-        'EndFragment:${fragmentEnd.toString().padLeft(10, '0')}',
-      );
-  final descUtf8 = utf8.encode(desc);
-  final utf8Result = [...descUtf8, ...htmlUtf8];
-  return utf8Result;
-}
