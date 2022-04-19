@@ -8,10 +8,11 @@ import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
 import 'package:win32/win32.dart' as win32;
 
-const _kCFHtml = 49286;
 const _kGMemMovable = 0x0002;
 
 const _kHtmlFormat = 'HTML Format';
+const _kStartFragmentComment = '<!--StartFragment-->';
+const _kEndFragmentComment = '<!--EndFragment-->';
 
 class _ClipboardFormat {
   final int format;
@@ -56,12 +57,14 @@ class RichClipboardWindows extends RichClipboardPlatform {
     final formats = <_ClipboardFormat>[];
     var current_format = win32.EnumClipboardFormats(win32.NULL);
     using((arena) {
-      final name_buffer = arena.allocate<Utf16>(256);
+      final name_buffer = arena.allocate<Uint16>(256);
       int max_chars = 256 ~/ sizeOf<Uint16>();
 
       while (current_format != 0) {
-        win32.GetClipboardFormatName(current_format, name_buffer, max_chars);
-        String? nameString = name_buffer.toDartString();
+        name_buffer.elementAt(0).cast<Uint16>().value = win32.NULL;
+        win32.GetClipboardFormatName(
+            current_format, name_buffer.cast<Utf16>(), max_chars);
+        String? nameString = name_buffer.cast<Utf16>().toDartString();
         if (nameString.isEmpty) {
           nameString = _win32CfToStrFallback[current_format];
         }
@@ -97,10 +100,13 @@ class RichClipboardWindows extends RichClipboardPlatform {
     String? text;
     String? html;
     try {
-      text = _getWin32ClipboardString([win32.CF_UNICODETEXT]);
+      text = _getWin32ClipboardString(win32.CF_UNICODETEXT);
       final cfHtml = _cfHtml;
       if (cfHtml != null) {
-        html = _getWin32ClipboardString([cfHtml], utf16: false);
+        html = _getWin32ClipboardString(cfHtml, isUtf8: true);
+        if (html != null) {
+          html = _stripWin32HtmlDescription(html);
+        }
       }
     } finally {
       win32.CloseClipboard();
@@ -121,60 +127,86 @@ class RichClipboardWindows extends RichClipboardPlatform {
     win32.EmptyClipboard();
 
     if (data.text != null) {
-      _setWin32ClipboardString(win32.CF_UNICODETEXT, data.text!);
+      _setWin32ClipboardStringByUnits(
+        win32.CF_UNICODETEXT,
+        data.text!.codeUnits,
+      );
     }
-    if (data.html != null) {
-      _setWin32ClipboardString(_kCFHtml, data.html!);
+    if (data.html != null && _cfHtml != null) {
+      _setWin32ClipboardHtml(data.html!);
     }
 
     win32.CloseClipboard();
   }
+
+  _setWin32ClipboardHtml(String html) {
+    final cfHtml = _cfHtml;
+    if (cfHtml == null) {
+      return;
+    }
+
+    // Windows wants these marker comments in the HTML, and future parts of our
+    // code relies on them being present. It's probably technically incorrect
+    // to just wrap the entire body since that could include things like meta
+    // tags, but it works for Google Docs so it's good enough for us.
+    if (!html.contains(_kStartFragmentComment)) {
+      final startBodyIndex = html.indexOf('<body>') + '<body>'.length;
+      html = html.substring(0, startBodyIndex) +
+          _kStartFragmentComment +
+          html.substring(startBodyIndex);
+    }
+    if (!html.contains(_kEndFragmentComment)) {
+      final endBodyIndex = html.indexOf('</body>');
+      html = html.substring(0, endBodyIndex) +
+          _kEndFragmentComment +
+          html.substring(endBodyIndex);
+    }
+
+    final htmlTemplateUnits = _templateWin32HtmlClipboardData(html);
+
+    _setWin32ClipboardStringByUnits(cfHtml, htmlTemplateUnits, isUtf8: true);
+  }
 }
 
-void _setWin32ClipboardString(int format, String text) {
-  final textUtf16 = text.codeUnits;
-
+void _setWin32ClipboardStringByUnits(int format, List<int> units,
+    {bool isUtf8 = false}) {
+  final unitSize = isUtf8 ? sizeOf<Uint8>() : sizeOf<Uint16>();
   final memHandle = win32.GlobalAlloc(
     _kGMemMovable,
-    (textUtf16.length + 1) * sizeOf<Uint16>(),
+    (units.length + 1) * unitSize,
   );
   if (memHandle == win32.NULL) {
     return;
   }
 
-  final utf16Ptr = win32.GlobalLock(memHandle).cast<Uint16>();
-  for (var i = 0; i < textUtf16.length; i++) {
-    utf16Ptr.elementAt(i).value = textUtf16[i];
+  final memPointer = win32.GlobalLock(memHandle).cast<Uint16>();
+
+  // Unfortunately I haven't found a way to deduplicate this code further as
+  // the exact type of `stringPointer` needs to be known at compile time.
+  // Trying to do dynamically assign it with something like
+  // `stringPointer = isUtf8 ? memPtr.cast<Uint8>() : memPtr.cast<Uint16>();`
+  // results in type errors at compile time.
+  if (isUtf8) {
+    final stringPointer = memPointer.cast<Uint8>();
+    for (var i = 0; i < units.length; i++) {
+      stringPointer[i] = units[i];
+    }
+    stringPointer.elementAt(units.length).value = win32.NULL;
+  } else {
+    final stringPointer = memPointer.cast<Uint16>();
+    for (var i = 0; i < units.length; i++) {
+      stringPointer[i] = units[i];
+    }
+    stringPointer.elementAt(units.length).value = win32.NULL;
   }
-  utf16Ptr.elementAt(textUtf16.length).value = 0x0;
 
   win32.GlobalUnlock(memHandle);
   win32.SetClipboardData(format, memHandle);
 }
 
-String? _getWin32ClipboardString(
-  List<int> formats, {
-  bool utf16 = true,
-  bool html = false,
-}) {
-  int chosenFormat = -1;
-  using((arena) {
-    final formatsPtr = arena.allocate<Uint32>(formats.length);
-    for (var i = 0; i < formats.length; i++) {
-      formatsPtr.elementAt(i).value = formats[i];
-    }
-
-    chosenFormat = win32.GetPriorityClipboardFormat(formatsPtr, formats.length);
-  });
-
-  if (chosenFormat < 1) {
-    return null;
-  }
-
-  final handle = win32.GetClipboardData(chosenFormat);
+String? _getWin32ClipboardString(int format, {bool isUtf8 = false}) {
+  final handle = win32.GetClipboardData(format);
   if (handle == win32.NULL) {
-    final err = win32.GetLastError();
-    print('ERR: 0x${err.toRadixString(16)}');
     return null;
   }
 
@@ -184,20 +216,24 @@ String? _getWin32ClipboardString(
     return null;
   }
 
-  final String fullStr;
-  if (utf16) {
-    fullStr = rawPtr.cast<Utf16>().toDartString();
+  final String resultString;
+  if (isUtf8) {
+    resultString = rawPtr.cast<Utf8>().toDartString();
   } else {
-    fullStr = rawPtr.cast<Utf8>().toDartString();
+    resultString = rawPtr.cast<Utf16>().toDartString();
   }
   win32.GlobalUnlock(handle);
 
-  if (!html) {
-    return fullStr;
-  }
+  return resultString;
+}
 
-  final startHtml = fullStr.indexOf('<html');
-  final htmlStr = fullStr.substring(startHtml < 0 ? 0 : startHtml);
+String _stripWin32HtmlDescription(String html) {
+  // The description has a StartHTML field we could use to calculate this
+  // instead, but it's in terms of byte offset so is annoying to work with
+  // once we already converted back to a Dart string, and since it's generated
+  // in application code it could just contain garbage anyway.
+  final startHtml = html.indexOf('<html');
+  final htmlStr = html.substring(startHtml < 0 ? 0 : startHtml);
 
   return htmlStr;
 }
@@ -232,25 +268,44 @@ const _win32CfToStrFallback = <int, String>{
 };
 
 List<int> _templateWin32HtmlClipboardData(String html) {
-  final desc = '''
+  const descTemplate = '''
 Version:0.9
-    StartHTML:0000000000
-    EndHTML:0000000000
-    StartFragment:0000000000
-    EndFragment:0000000000
+StartHTML:0000000000
+EndHTML:0000000000
+StartFragment:0000000000
+EndFragment:0000000000
 ''';
-  final descUtf8Len = utf8.encode(desc).length;
+  final descUtf8Len = utf8.encode(descTemplate).length;
   final htmlUtf8 = utf8.encode(html);
   final htmlStart = descUtf8Len;
   final htmlEnd = descUtf8Len + htmlUtf8.length;
-  desc.replaceAll('StartHTML:0000000000',
-      'StartHTML:${htmlStart.toString().padLeft(10, '0')}');
-  desc.replaceAll(
-      'EndHTML:0000000000', 'EndHTML:${htmlEnd.toString().padLeft(10, '0')}');
-  desc.replaceAll('StartFragment:0000000000',
-      'StartHTML:${htmlStart.toString().padLeft(10, '0')}');
-  desc.replaceAll('EndFragment:0000000000',
-      'EndHTML:${htmlEnd.toString().padLeft(10, '0')}');
+  final fragmentStart = descUtf8Len +
+      utf8
+          .encode(html.substring(0, html.indexOf(_kStartFragmentComment)))
+          .length +
+      utf8.encode(_kStartFragmentComment).length;
+  final fragmentEnd = descUtf8Len +
+      utf8
+          .encode(html.substring(0, html.lastIndexOf(_kEndFragmentComment)))
+          .length;
+  final desc = descTemplate
+      .replaceAll(
+        'StartHTML:0000000000',
+        'StartHTML:${htmlStart.toString().padLeft(10, '0')}',
+      )
+      .replaceAll(
+        'EndHTML:0000000000',
+        'EndHTML:${htmlEnd.toString().padLeft(10, '0')}',
+      )
+      .replaceAll(
+        'StartFragment:0000000000',
+        'StartFragment:${fragmentStart.toString().padLeft(10, '0')}',
+      )
+      .replaceAll(
+        'EndFragment:0000000000',
+        'EndFragment:${fragmentEnd.toString().padLeft(10, '0')}',
+      );
   final descUtf8 = utf8.encode(desc);
-  return [...descUtf8, ...htmlUtf8];
+  final utf8Result = [...descUtf8, ...htmlUtf8];
+  return utf8Result;
 }
