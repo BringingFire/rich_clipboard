@@ -1,5 +1,6 @@
 library rich_clipboard_windows;
 
+import 'dart:convert' show utf8;
 import 'dart:ffi';
 
 import 'package:ffi/ffi.dart';
@@ -8,6 +9,7 @@ import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interf
 import 'package:win32/win32.dart' as win32;
 
 const _kCFHtml = 49286;
+const _kGMemMovable = 0x0002;
 
 class RichClipboardWindows extends RichClipboardPlatform {
   /// Registers the Windows implementation.
@@ -17,7 +19,7 @@ class RichClipboardWindows extends RichClipboardPlatform {
 
   @override
   Future<List<String>> getAvailableTypes() async {
-    if (win32.OpenClipboard(0) == 0) {
+    if (win32.OpenClipboard(0) == win32.NULL) {
       return [];
     }
 
@@ -45,7 +47,7 @@ class RichClipboardWindows extends RichClipboardPlatform {
 
   @override
   Future<RichClipboardData> getData() async {
-    if (win32.OpenClipboard(0) == 0) {
+    if (win32.OpenClipboard(0) == win32.NULL) {
       return const RichClipboardData();
     }
 
@@ -73,8 +75,26 @@ class RichClipboardWindows extends RichClipboardPlatform {
 
   @override
   Future<void> setData(RichClipboardData data) async {
-    // TODO: implement setData
-    throw UnimplementedError();
+    if (win32.OpenClipboard(0) == win32.NULL) {
+      return;
+    }
+
+    win32.EmptyClipboard();
+
+    if (data.text != null) {
+      final textUtf16 = data.text!.codeUnits;
+      final alloc = win32.GlobalAlloc(
+          _kGMemMovable, (textUtf16.length + 1) * sizeOf<Uint16>());
+      final handle = win32.GlobalLock(alloc).cast<Uint16>();
+      for (var i = 0; i < textUtf16.length; i++) {
+        handle.elementAt(i).value = textUtf16[i];
+      }
+      handle.elementAt(textUtf16.length).value = 0x0;
+      win32.GlobalUnlock(alloc);
+      win32.SetClipboardData(win32.CF_UNICODETEXT, alloc);
+    }
+
+    win32.CloseClipboard();
   }
 }
 
@@ -94,7 +114,7 @@ String? _getWin32ClipboardString(List<int> formats, {bool ascii = false}) {
   }
 
   final handle = win32.GetClipboardData(chosenFormat);
-  if (handle == 0) {
+  if (handle == win32.NULL) {
     final err = win32.GetLastError();
     print('ERR: 0x${err.toRadixString(16)}');
     return null;
@@ -152,3 +172,27 @@ const _win32CfToStrFallback = <int, String>{
   win32.CF_GDIOBJFIRST: 'CF_GDIOBJFIRST',
   win32.CF_GDIOBJLAST: 'CF_GDIOBJLAST',
 };
+
+List<int> _templateWin32HtmlClipboardData(String html) {
+  final desc = '''
+Version:0.9
+    StartHTML:0000000000
+    EndHTML:0000000000
+    StartFragment:0000000000
+    EndFragment:0000000000
+''';
+  final descUtf8Len = utf8.encode(desc).length;
+  final htmlUtf8 = utf8.encode(html);
+  final htmlStart = descUtf8Len;
+  final htmlEnd = descUtf8Len + htmlUtf8.length;
+  desc.replaceAll('StartHTML:0000000000',
+      'StartHTML:${htmlStart.toString().padLeft(10, '0')}');
+  desc.replaceAll(
+      'EndHTML:0000000000', 'EndHTML:${htmlEnd.toString().padLeft(10, '0')}');
+  desc.replaceAll('StartFragment:0000000000',
+      'StartHTML:${htmlStart.toString().padLeft(10, '0')}');
+  desc.replaceAll('EndFragment:0000000000',
+      'EndHTML:${htmlEnd.toString().padLeft(10, '0')}');
+  final descUtf8 = utf8.encode(desc);
+  return [...descUtf8, ...htmlUtf8];
+}
