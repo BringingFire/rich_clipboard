@@ -3,6 +3,7 @@ library rich_clipboard_windows;
 import 'dart:convert' show utf8;
 import 'dart:ffi';
 
+import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
@@ -11,10 +12,65 @@ import 'package:win32/win32.dart' as win32;
 const _kCFHtml = 49286;
 const _kGMemMovable = 0x0002;
 
+const _kHtmlFormat = 'HTML Format';
+
+class _ClipboardFormat {
+  final int format;
+  final String? name;
+
+  const _ClipboardFormat({required this.format, this.name});
+}
+
 class RichClipboardWindows extends RichClipboardPlatform {
+  int? __cfHtml;
+  int? get _cfHtml {
+    if (__cfHtml != null) {
+      return __cfHtml;
+    }
+
+    if (win32.OpenClipboard(win32.NULL) == win32.FALSE) {
+      return null;
+    }
+
+    final formats = _getFormats();
+
+    final htmlFormat =
+        formats.firstWhereOrNull((cf) => cf.name == _kHtmlFormat);
+    if (htmlFormat == null) {
+      return null;
+    }
+
+    __cfHtml = htmlFormat.format;
+    return __cfHtml!;
+  }
+
   /// Registers the Windows implementation.
   static void registerWith() {
     RichClipboardPlatform.instance = RichClipboardWindows();
+  }
+
+  List<_ClipboardFormat> _getFormats() {
+    final formats = <_ClipboardFormat>[];
+    var current_format = win32.EnumClipboardFormats(win32.NULL);
+    using((arena) {
+      final name_buffer = arena.allocate<Utf16>(256);
+      int max_chars = 256 ~/ sizeOf<Uint16>();
+
+      while (current_format != 0) {
+        win32.GetClipboardFormatName(current_format, name_buffer, max_chars);
+        String? nameString = name_buffer.toDartString();
+        if (nameString.isEmpty) {
+          nameString = _win32CfToStrFallback[current_format];
+        }
+        formats.add(_ClipboardFormat(
+          format: current_format,
+          name: nameString,
+        ));
+        current_format = win32.EnumClipboardFormats(current_format);
+      }
+    });
+
+    return formats;
   }
 
   @override
@@ -23,26 +79,10 @@ class RichClipboardWindows extends RichClipboardPlatform {
       return [];
     }
 
-    final formats = <String>[];
-    var current_format = win32.EnumClipboardFormats(0);
-
-    using((arena) {
-      final name_buffer = arena.allocate<Utf16>(256);
-      int max_chars = 256 ~/ sizeOf<Uint16>();
-
-      while (current_format != 0) {
-        win32.GetClipboardFormatName(current_format, name_buffer, max_chars);
-        var nameString = name_buffer.toDartString();
-        if (nameString.isEmpty) {
-          nameString = _win32CfToStrFallback[current_format] ?? '';
-        }
-        formats.add('$nameString ($current_format)');
-        current_format = win32.EnumClipboardFormats(current_format);
-      }
-    });
-
+    final formats = _getFormats();
     win32.CloseClipboard();
-    return formats;
+
+    return formats.map((cf) => '${cf.format} ("${cf.name}")').toList();
   }
 
   @override
@@ -51,18 +91,14 @@ class RichClipboardWindows extends RichClipboardPlatform {
       return const RichClipboardData();
     }
 
-    final String? text;
-    final String? html;
+    String? text;
+    String? html;
     try {
       text = _getWin32ClipboardString([win32.CF_UNICODETEXT]);
-      html = _getWin32ClipboardString(
-        [
-          // 49796,
-          _kCFHtml,
-          // 13,
-        ],
-        ascii: true,
-      );
+      final cfHtml = _cfHtml;
+      if (cfHtml != null) {
+        html = _getWin32ClipboardString([cfHtml], utf16: false);
+      }
     } finally {
       win32.CloseClipboard();
     }
