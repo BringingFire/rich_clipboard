@@ -8,7 +8,7 @@ import Foundation
 import audio_session
 import just_audio
 import path_provider_macos
-import rich_clipboard
+import rich_clipboard_macos
 import sqflite
 import url_launcher_macos
 import wakelock_macos
