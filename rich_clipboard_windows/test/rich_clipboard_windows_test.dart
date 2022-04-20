@@ -186,7 +186,6 @@ void main() {
       when(win32clipboard.open()).thenReturn(true);
       when(win32clipboard.empty()).thenReturn(true);
       when(win32clipboard.close()).thenReturn(true);
-      when(win32clipboard.setString(CF_UNICODETEXT, any));
 
       await clipboard.setData(const RichClipboardData(text: text));
 
@@ -204,12 +203,6 @@ void main() {
       when(win32clipboard.empty()).thenReturn(true);
       when(win32clipboard.close()).thenReturn(true);
       when(win32clipboard.registerFormat(htmlName)).thenReturn(htmlId);
-      when(win32clipboard.setString(CF_UNICODETEXT, any));
-      when(win32clipboard.setStringByUnits(
-        htmlId,
-        any,
-        encoding: ClipboardEncoding.utf8,
-      )).thenReturn(true);
 
       await clipboard.setData(const RichClipboardData(text: text, html: html));
 
