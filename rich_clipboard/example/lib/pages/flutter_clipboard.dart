@@ -17,7 +17,7 @@ class _FlutterClipboardPageState extends State<FlutterClipboardPage> {
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: 'Refresh me');
+    _controller = TextEditingController();
   }
 
   @override
