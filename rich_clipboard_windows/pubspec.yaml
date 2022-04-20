@@ -22,10 +22,6 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.1.0
 
-dependency_overrides:
-  rich_clipboard_platform_interface:
-    path: ../rich_clipboard_platform_interface
-
 flutter:
   plugin:
     implements: rich_clipboard

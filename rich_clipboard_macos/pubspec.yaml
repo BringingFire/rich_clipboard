@@ -17,10 +17,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-dependency_overrides:
-  rich_clipboard_platform_interface:
-    path: ../rich_clipboard_platform_interface
-
 flutter:
   plugin:
     implements: rich_clipboard
