@@ -12,9 +12,9 @@ as support is added for more platforms.
 
 ## Platform Support
 
-macOS | Windows | Linux | Android | iOS
-:----:|:-------:|:-----:|:-------:|:---:
- ✅   | ✅      | ❌     | ❌    | ❌
+macOS | Windows | Linux | Android | iOS | Web
+:----:|:-------:|:-----:|:-------:|:---:|:---:
+ ✅   | ✅      |❌     | ❌     | ❌  | ❌
 
 ## Unsupported Platforms
 
