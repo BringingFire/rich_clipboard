@@ -31,4 +31,15 @@ class RichClipboardData implements ClipboardData {
 
   @override
   String toString() => 'RichClipboardData{ text: $text, html: $html }';
+
+  @override
+  operator ==(Object other) =>
+      identical(this, other) ||
+      other is RichClipboardData &&
+          runtimeType == other.runtimeType &&
+          text == other.text &&
+          html == other.html;
+
+  @override
+  int get hashCode => text.hashCode ^ html.hashCode;
 }

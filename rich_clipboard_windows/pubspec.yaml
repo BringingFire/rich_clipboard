@@ -17,8 +17,10 @@ dependencies:
   win32: ^2.5.1
 
 dev_dependencies:
+  build_runner: ^2.1.10
   flutter_test:
     sdk: flutter
+  mockito: ^5.1.0
 
 dependency_overrides:
   rich_clipboard_platform_interface:

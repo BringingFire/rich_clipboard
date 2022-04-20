@@ -11,7 +11,6 @@ const _kHtmlFormat = 'HTML Format';
 
 /// The Windows implementation of [RichClipboard].
 class RichClipboardWindows extends RichClipboardPlatform {
-
   /// The object for managing clipboard related win32 API calls.
   @visibleForTesting
   Win32Clipboard clipboard = Win32Clipboard();
@@ -22,18 +21,23 @@ class RichClipboardWindows extends RichClipboardPlatform {
   }
 
   /// The id of the clipboard format for HTML.
-  /// 
+  ///
   /// This getter will register the format if it does not already exist. Only
   /// evaluates to `null` when an error occurs.
-  int? get _cfHtml {
-    __cfHtml ??= clipboard.registerFormat(_kHtmlFormat);
-    return __cfHtml;
+  @visibleForTesting
+  int? get cfHtml {
+    _cfHtml ??= clipboard.registerFormat(_kHtmlFormat);
+    return _cfHtml;
   }
-  int? __cfHtml;
+
+  int? _cfHtml;
 
   @override
   Future<List<String>> getAvailableTypes() async {
-    clipboard.open();
+    if (!clipboard.open()) {
+      return [];
+    }
+
     final results = clipboard
         .getAvailableFormats()
         .map((cf) => '${cf.format} ("${cf.name}")')
@@ -52,9 +56,8 @@ class RichClipboardWindows extends RichClipboardPlatform {
     String? html;
     try {
       text = clipboard.getString(CF_UNICODETEXT);
-      final cfHtml = _cfHtml;
       if (cfHtml != null) {
-        html = clipboard.getString(cfHtml, encoding: ClipboardEncoding.utf8);
+        html = clipboard.getString(cfHtml!, encoding: ClipboardEncoding.utf8);
         if (html != null) {
           html = stripWin32HtmlDescription(html);
         }
@@ -80,7 +83,7 @@ class RichClipboardWindows extends RichClipboardPlatform {
     if (data.text != null) {
       clipboard.setString(CF_UNICODETEXT, data.text!);
     }
-    if (data.html != null && _cfHtml != null) {
+    if (data.html != null && cfHtml != null) {
       _setHtmlData(data.html!);
     }
 
@@ -88,14 +91,13 @@ class RichClipboardWindows extends RichClipboardPlatform {
   }
 
   _setHtmlData(String html) {
-    final cfHtml = _cfHtml;
     if (cfHtml == null) {
       return;
     }
 
     final htmlCodeUnits = constructWin32HtmlClipboardData(html);
 
-    clipboard.setStringByUnits(cfHtml, htmlCodeUnits,
+    clipboard.setStringByUnits(cfHtml!, htmlCodeUnits,
         encoding: ClipboardEncoding.utf8);
   }
 }
