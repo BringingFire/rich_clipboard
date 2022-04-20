@@ -4,7 +4,14 @@ import '../rich_clipboard_platform_interface.dart';
 
 const MethodChannel _channel = MethodChannel('com.bringingfire.rich_clipboard');
 
+/// A default [RichClipboardPlatform] implementation backed by a platform
+/// channel.
 class MethodChannelRichClipboard extends RichClipboardPlatform {
+  /// Registers this implementation.
+  static void registerWith() {
+    RichClipboardPlatform.instance = MethodChannelRichClipboard();
+  }
+
   @override
   Future<List<String>> getAvailableTypes() async {
     final List<String>? result =

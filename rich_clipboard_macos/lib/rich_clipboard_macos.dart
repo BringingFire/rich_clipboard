@@ -1,2 +1,4 @@
-// All functionality is implemented via a MethodChannel in Swift. This file is
-// here to stop Flutter from breaking.
+// Re-export the default method channel implementation so flutter code gen can
+// find it.
+export 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart'
+    show MethodChannelRichClipboard;

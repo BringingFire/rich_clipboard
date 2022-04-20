@@ -1,8 +1,9 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'src/method_channel_rich_clipboard.dart';
+import 'src/fallback_rich_clipboard.dart';
 import 'src/rich_clipboard_data.dart';
 
+export 'src/method_channel_rich_clipboard.dart' show MethodChannelRichClipboard;
 export 'src/rich_clipboard_data.dart' show RichClipboardData;
 
 abstract class RichClipboardPlatform extends PlatformInterface {
@@ -10,7 +11,7 @@ abstract class RichClipboardPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static RichClipboardPlatform _instance = MethodChannelRichClipboard();
+  static RichClipboardPlatform _instance = FallbackRichClipboard();
 
   static RichClipboardPlatform get instance => _instance;
 

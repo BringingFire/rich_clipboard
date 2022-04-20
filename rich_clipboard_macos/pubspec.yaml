@@ -27,3 +27,4 @@ flutter:
     platforms:
       macos:
         pluginClass: RichClipboardPlugin
+        dartPluginClass: MethodChannelRichClipboard
