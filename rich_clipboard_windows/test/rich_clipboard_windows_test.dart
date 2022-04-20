@@ -25,7 +25,7 @@ void main() {
   });
 
   test('cfHtml registers the format and caches the result', () {
-    final htmlId = 27017;
+    const htmlId = 27017;
     when(win32clipboard.registerFormat(any)).thenReturn(htmlId);
 
     expect(clipboard.cfHtml, htmlId);
@@ -186,7 +186,7 @@ void main() {
       when(win32clipboard.open()).thenReturn(true);
       when(win32clipboard.empty()).thenReturn(true);
       when(win32clipboard.close()).thenReturn(true);
-      when(win32clipboard.setString(CF_UNICODETEXT, any)).thenReturn(true);
+      when(win32clipboard.setString(CF_UNICODETEXT, any));
 
       await clipboard.setData(const RichClipboardData(text: text));
 
@@ -204,7 +204,7 @@ void main() {
       when(win32clipboard.empty()).thenReturn(true);
       when(win32clipboard.close()).thenReturn(true);
       when(win32clipboard.registerFormat(htmlName)).thenReturn(htmlId);
-      when(win32clipboard.setString(CF_UNICODETEXT, any)).thenReturn(true);
+      when(win32clipboard.setString(CF_UNICODETEXT, any));
       when(win32clipboard.setStringByUnits(
         htmlId,
         any,

@@ -119,24 +119,24 @@ packages:
   rich_clipboard_macos:
     dependency: "direct main"
     description:
-      path: "../rich_clipboard_macos"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: rich_clipboard_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   rich_clipboard_platform_interface:
     dependency: "direct main"
     description:
-      path: "../rich_clipboard_platform_interface"
-      relative: true
-    source: path
+      name: rich_clipboard_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "0.0.1"
   rich_clipboard_windows:
     dependency: "direct main"
     description:
-      path: "../rich_clipboard_windows"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: rich_clipboard_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

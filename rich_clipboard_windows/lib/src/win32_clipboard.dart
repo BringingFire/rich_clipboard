@@ -55,24 +55,24 @@ class Win32Clipboard {
   /// You must already have opened the clipboard with [Win32Clipboard.open].
   List<ClipboardFormat> getAvailableFormats() {
     final formats = <ClipboardFormat>[];
-    var current_format = EnumClipboardFormats(NULL);
+    var currentFormat = EnumClipboardFormats(NULL);
     using((arena) {
-      final name_buffer = arena.allocate<Uint16>(256);
-      int max_chars = 256 ~/ sizeOf<Uint16>();
+      final nameBuffer = arena.allocate<Uint16>(256);
+      int maxChars = 256 ~/ sizeOf<Uint16>();
 
-      while (current_format != 0) {
-        name_buffer.elementAt(0).cast<Uint16>().value = NULL;
+      while (currentFormat != 0) {
+        nameBuffer.elementAt(0).cast<Uint16>().value = NULL;
         GetClipboardFormatName(
-            current_format, name_buffer.cast<Utf16>(), max_chars);
-        String? nameString = name_buffer.cast<Utf16>().toDartString();
+            currentFormat, nameBuffer.cast<Utf16>(), maxChars);
+        String? nameString = nameBuffer.cast<Utf16>().toDartString();
         if (nameString.isEmpty) {
-          nameString = _win32CfToStrFallback[current_format];
+          nameString = _win32CfToStrFallback[currentFormat];
         }
         formats.add(ClipboardFormat(
-          format: current_format,
+          format: currentFormat,
           name: nameString,
         ));
-        current_format = EnumClipboardFormats(current_format);
+        currentFormat = EnumClipboardFormats(currentFormat);
       }
     });
 
