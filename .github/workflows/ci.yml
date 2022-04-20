@@ -7,8 +7,8 @@ on:
   push:
    branches: [ dev ]
    paths:
-    - 'lib/**/*'
-    - 'test/**/*'
+    - 'rich_clipboard*/lib/**/*'
+    - 'rich_clipboard*/test/**/*'
     - '*.yml'
     - '*.yaml'
     - 'pubspec.lock'
@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Setup
         uses: ./.github/actions/setup
 
@@ -30,6 +30,19 @@ jobs:
         run: flutter format --output=none --set-exit-if-changed .
 
       - name: Analyze code
+        working-directory: rich_clipboard
+        run: flutter analyze
+
+      - name: Analyze code (platform)
+        working-directory: rich_clipboard_platform_interface
+        run: flutter analyze
+
+      - name: Analyze code (macOS)
+        working-directory: rich_clipboard_macos
+        run: flutter analyze
+
+      - name: Analyze code (Windows)
+        working-directory: rich_clipboard_windows
         run: flutter analyze
 
   test:
@@ -39,9 +52,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Setup
         uses: ./.github/actions/setup
-      
+
       - name: Run tests
+        working-directory: rich_clipboard
+        run: flutter test
+
+  test-windows:
+    name: Test (Windows)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Run tests
+        working-directory: rich_clipboard_windows
         run: flutter test
