@@ -1,7 +1,6 @@
 library rich_clipboard_windows;
 
 import 'package:flutter/cupertino.dart';
-import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
 import 'package:rich_clipboard_windows/src/win32_clipboard.dart';
 

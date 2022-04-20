@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
 import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
 import 'package:rich_clipboard_windows/rich_clipboard_windows.dart';
 import 'package:rich_clipboard_windows/src/win32_clipboard.dart';

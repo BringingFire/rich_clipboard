@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:rich_clipboard_platform_interface/rich_clipboard_data.dart';
-import 'package:rich_clipboard_platform_interface/rich_clipboard_platform_interface.dart';
+
+import '../rich_clipboard_platform_interface.dart';
 
 const MethodChannel _channel = MethodChannel('com.bringingfire.rich_clipboard');
 

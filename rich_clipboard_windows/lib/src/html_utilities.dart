@@ -1,6 +1,5 @@
 import 'dart:convert' show utf8;
 
-const _kHtmlFormat = 'HTML Format';
 const _kStartFragmentComment = '<!--StartFragment-->';
 const _kEndFragmentComment = '<!--EndFragment-->';
 

@@ -1,7 +1,9 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'method_channel_rich_clipboard.dart';
-import 'rich_clipboard_data.dart';
+import 'src/method_channel_rich_clipboard.dart';
+import 'src/rich_clipboard_data.dart';
+
+export 'src/rich_clipboard_data.dart' show RichClipboardData;
 
 abstract class RichClipboardPlatform extends PlatformInterface {
   RichClipboardPlatform() : super(token: _token);
