@@ -3,8 +3,7 @@ import 'dart:convert' show utf8;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rich_clipboard_windows/src/html_utilities.dart';
 
-const kWindowsClipboardHtmlData =
-    '''
+const kWindowsClipboardHtmlData = '''
 Version:0.9
 StartHTML:00000134
 EndHTML:00000221
@@ -70,8 +69,7 @@ void main() {
     expect(endFragmentStr, isNotNull);
     final endFragment = int.parse(endFragmentStr!);
 
-    final fragmentString =
-        utf8
+    final fragmentString = utf8
         .decode(clipboardHtmlData.sublist(startFragment, endFragment))
         .trim();
     expect(fragmentString, startsWith('<h1>'));

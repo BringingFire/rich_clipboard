@@ -3,8 +3,7 @@ import 'dart:convert' show utf8;
 const _kStartFragmentComment = '<!--StartFragment-->';
 const _kEndFragmentComment = '<!--EndFragment-->';
 
-const _kHtmlDescriptionTemplate =
-    '''
+const _kHtmlDescriptionTemplate = '''
 Version:0.9
 StartHTML:0000000000
 EndHTML:0000000000

@@ -20,7 +20,6 @@ class RichClipboard {
   /// available in the system clipboard then the future will complete to an
   /// empty list.
   static Future<List<String>> getAvailableTypes() async =>
-
       await _platform.getAvailableTypes();
 
   /// Retrieves data from the system clipboard in supported formats.
