@@ -2,7 +2,7 @@ name: rich_clipboard_macos
 description: macOS implementation of the rich_clipboard plugin.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_macos
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_macos
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
