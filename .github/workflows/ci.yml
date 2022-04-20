@@ -12,6 +12,7 @@ on:
     - '*.yml'
     - '*.yaml'
     - 'pubspec.lock'
+    - '.github/**/*'
   pull_request: {}
 
 jobs:
@@ -25,6 +26,20 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+      
+      - name: Install dependencies
+        shell: bash
+        run: |
+          for dir in rich_clipboard{,_platform_interface,_macos,_windows}; do
+            pushd $dir
+            flutter pub get
+            popd
+          done
+
+      - name: Generate code
+        shell: bash
+        working-directory: rich_clipboard_windows
+        run: flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
@@ -45,21 +60,6 @@ jobs:
         working-directory: rich_clipboard_windows
         run: flutter analyze
 
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Run tests
-        working-directory: rich_clipboard
-        run: flutter test
-
   test-windows:
     name: Test (Windows)
     runs-on: ubuntu-latest
@@ -70,6 +70,14 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Install dependencies
+        working-directory: rich_clipboard_windows
+        run: flutter pub get
+
+      - name: Generate code
+        working-directory: rich_clipboard_windows
+        run: flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Run tests
         working-directory: rich_clipboard_windows

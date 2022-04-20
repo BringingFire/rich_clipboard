@@ -35,16 +35,3 @@ runs:
         flutter config --enable-linux-desktop
         flutter config --enable-windows-desktop
         flutter config --enable-macos-desktop
-
-    - name: Cache dependencies
-      uses: actions/cache@v2
-      with:
-        path: ${{ env.PUB_CACHE }}
-        key: pub-cache-${{ hashFiles('pubspec.lock') }}
-        restore-keys: |
-          pub-cache-${{ hashFiles('pubspec.lock') }}
-          pub-cache-
-    
-    - name: Install dependencies
-      shell: bash
-      run: flutter pub get
