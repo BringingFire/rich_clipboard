@@ -1,5 +1,7 @@
 # rich_clipboard_platform_interface
 
+[![Pub Version](https://img.shields.io/pub/v/rich_clipboard_platform_interface)](https://pub.dev/packages/rich_clipboard_platform_interface)
+
 A common platform interface for the [`rich_clipboard`][1] plugin.
 
 This interface allows platform-specific implementations of the `rich_clipboard`

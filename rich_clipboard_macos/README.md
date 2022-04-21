@@ -1,5 +1,7 @@
 # rich_clipboard_macos
 
+[![Pub Version](https://img.shields.io/pub/v/rich_clipboard_macos)](https://pub.dev/packages/rich_clipboard_macos)
+
 The macOS implementation of [`rich_clipboard`][1].
 
 ## Usage
