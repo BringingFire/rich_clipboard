@@ -19,7 +19,7 @@ macOS | Windows | Linux | Android | iOS | Web
 ## Unsupported Platforms
 
   On unsupported platforms this plugin will provide plain text only support
-  rather that failing. This is done by transparently calling methods on
+  rather than failing. This is done by transparently calling methods on
   Flutter's built-in [`Clipboard`][1] where appropriate, or returning mock
   empty values where no analogue exists. In these cases some data may be
   silently discarded, such as when attempting to write data types other

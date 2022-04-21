@@ -2,7 +2,7 @@ name: rich_clipboard
 description: Flutter plugin for accessing rich text and other data types in the system clipboard.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ">=2.16.1 <3.0.0"
