@@ -1,0 +1,20 @@
+name: rich_clipboard
+repository: https://github.com/BringingFire/rich_clipboard
+
+packages:
+  - rich_clipboard/pubspec.yaml
+  - rich_clipboard/example/pubspec.yaml
+  - rich_clipboard_platform_interface/pubspec.yaml
+  - rich_clipboard_macos/pubspec.yaml
+  - rich_clipboard_windows/pubspec.yaml
+
+scripts:
+  analyze: melos exec -- "dart analyze ."
+  generate:
+    run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    select-package:
+      depends-on: build_runner
+  test:
+    run: melos exec --fail-fast -- "flutter test"
+    select-package:
+      dir-exists: test
