@@ -10,7 +10,9 @@ import '../rich_clipboard_platform_interface.dart';
 class FallbackRichClipboard extends RichClipboardPlatform {
   @override
   Future<List<String>> getAvailableTypes() async =>
-      const [Clipboard.kTextPlain];
+      (await Clipboard.getData(Clipboard.kTextPlain))?.text != null
+          ? [Clipboard.kTextPlain]
+          : [];
 
   @override
   Future<RichClipboardData> getData() => Clipboard.getData(Clipboard.kTextPlain)
