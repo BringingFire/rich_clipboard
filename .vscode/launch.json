@@ -6,14 +6,14 @@
   "configurations": [
     {
       "name": "example",
-      "cwd": "packages/rich_clipboard/example",
+      "cwd": "rich_clipboard/example",
       "request": "launch",
       "program": "lib/main.dart",
       "type": "dart"
     },
     {
       "name": "example (profile mode)",
-      "cwd": "packages/rich_clipboard/example",
+      "cwd": "rich_clipboard/example",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
@@ -21,7 +21,7 @@
     },
     {
       "name": "example (release mode)",
-      "cwd": "packages/rich_clipboard/example",
+      "cwd": "rich_clipboard/example",
       "request": "launch",
       "type": "dart",
       "program": "lib/main.dart",
