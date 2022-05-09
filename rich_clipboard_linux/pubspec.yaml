@@ -1,0 +1,25 @@
+name: rich_clipboard_linux
+description: Linux implementation of the rich_clipboard plugin.
+homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_linux
+repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_linux
+version: 0.0.1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+  flutter: ">=2.10.0"
+
+flutter:
+  plugin:
+    implements: rich_clipboard
+    platforms:
+      linux:
+        pluginClass: RichClipboardPlugin
+        dartPluginClass: MethodChannelRichClipboard
+
+dependencies:
+  flutter:
+    sdk: flutter
+  rich_clipboard_platform_interface: ^0.0.1
+
+dev_dependencies:
+  flutter_lints: ^1.0.0

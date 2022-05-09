@@ -14,7 +14,7 @@ as support is added for more platforms.
 
 macOS | Windows | Linux | Android | iOS | Web
 :----:|:-------:|:-----:|:-------:|:---:|:---:
- ✅   | ✅      |❌     | ❌     | ❌  | ❌
+ ✅   | ✅      | ✅    | ❌     | ❌  | ❌
 
 ## Unsupported Platforms
 

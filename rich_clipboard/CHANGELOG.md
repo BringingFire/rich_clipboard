@@ -1,3 +1,7 @@
+## 0.0.3
+
+- Adding endorsed Linux implementation
+
 ## 0.0.2
 
 - Fixing typo in readme file; no functional changes.
