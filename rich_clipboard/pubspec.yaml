@@ -13,6 +13,7 @@ dependencies:
     sdk: flutter
   rich_clipboard_macos: ^0.0.1
   rich_clipboard_windows: ^0.0.1
+  rich_clipboard_linux: ^0.0.1
   rich_clipboard_platform_interface: ^0.0.1
 
 dev_dependencies:
@@ -27,3 +28,5 @@ flutter:
         default_package: rich_clipboard_macos
       windows:
         default_package: rich_clipboard_windows
+      linux:
+        default_package: rich_clipboard_linux

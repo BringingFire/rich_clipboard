@@ -37,6 +37,8 @@ dependency_overrides:
     path: ../../rich_clipboard_macos
   rich_clipboard_windows:
     path: ../../rich_clipboard_windows
+  rich_clipboard_linux:
+    path: ../../rich_clipboard_linux
   rich_clipboard_platform_interface:
     path: ../../rich_clipboard_platform_interface
 
