@@ -7,9 +7,11 @@
 #include <cstring>
 
 const char kChannelName[] = "com.bringingfire.rich_clipboard";
-// const char kGetData[] = "getData";
+const char kGetData[] = "getData";
 // const char kSetData[] = "setData";
 const char kGetAvailableTypes[] = "getAvailableTypes";
+const char kMimeTextPlain[] = "text/plain";
+const char kMimeTextHtml[] = "text/html";
 
 struct _FlRichClipboardPlugin
 {
@@ -55,7 +57,40 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
         clipboard,
         gtk_clipboard_request_targets_callback,
         g_object_ref(method_call));
-    // response = FL_METHOD_RESPONSE(fl_method_success_response_new(result));
+  }
+  else if (strcmp(method, kGetData) == 0)
+  {
+    auto *clipboard = gtk_clipboard_get_default(gdk_display_get_default());
+    g_autoptr(FlValue) result = fl_value_new_map();
+
+    auto *text = gtk_clipboard_wait_for_text(clipboard);
+    if (text != nullptr)
+    {
+      fl_value_set_string_take(result, kMimeTextPlain, fl_value_new_string(text));
+      g_free(text);
+    }
+
+    auto *htmlData = gtk_clipboard_wait_for_contents(clipboard, gdk_atom_intern_static_string(kMimeTextHtml));
+    if (htmlData != nullptr)
+    {
+      // Testing shows that GTK will just return plain if no HTML data is available, so make sure we actually
+      // have HTML before adding it to the result map.
+      auto htmlType = gtk_selection_data_get_data_type(htmlData);
+      auto htmlTypeName = gdk_atom_name(htmlType);
+      if (strcmp(htmlTypeName, kMimeTextHtml) == 0)
+      {
+        gint htmlLen;
+        auto *html = gtk_selection_data_get_data_with_length(htmlData, &htmlLen);
+        if (html != nullptr)
+        {
+          fl_value_set_string_take(result, kMimeTextHtml, fl_value_new_string_sized((gchar *)html, htmlLen));
+        }
+      }
+      g_free(htmlTypeName);
+      gtk_selection_data_free(htmlData);
+    }
+
+    fl_method_call_respond_success(method_call, result, nullptr);
   }
   else
   {
