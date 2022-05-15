@@ -54,7 +54,7 @@ class _SuperEditorPageState extends State<SuperEditorPage> {
                   final oldDoc = _editor.document;
                   _editor = DocumentEditor(
                       document: deserializeMarkdownToDocument(starterDoc));
-                  WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                     oldDoc.dispose();
                   });
                 });
