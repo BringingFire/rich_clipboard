@@ -144,6 +144,7 @@ class _RichClipboardPageState extends State<RichClipboardPage> {
               ),
             ],
           ),
+          const Gap(20),
         ],
       ),
     );

@@ -8,6 +8,7 @@ packages:
   - rich_clipboard_macos/pubspec.yaml
   - rich_clipboard_windows/pubspec.yaml
   - rich_clipboard_linux/pubspec.yaml
+  - rich_clipboard_web/pubspec.yaml
 
 scripts:
   analyze: melos exec -- "dart analyze ."

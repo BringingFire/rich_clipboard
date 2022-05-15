@@ -12,9 +12,9 @@ as support is added for more platforms.
 
 ## Platform Support
 
-macOS | Windows | Linux | Android | iOS | Web
-:----:|:-------:|:-----:|:-------:|:---:|:---:
- ✅   | ✅      | ✅    | ❌     | ❌  | ❌
+macOS | Windows | Linux | Web             | Android | iOS
+:----:|:-------:|:-----:|:---------------:|:-------:|:---:
+ ✅   | ✅       | ✅    | ✅ [*](#firefox) | ❌      | ❌
 
 ## Unsupported Platforms
 
@@ -24,6 +24,16 @@ macOS | Windows | Linux | Android | iOS | Web
   empty values where no analogue exists. In these cases some data may be
   silently discarded, such as when attempting to write data types other
   than plain text to the clipboard.
+
+### Firefox
+
+While "the web" is currently a supported platform, support for Firefox is
+currently not possible due to its incomplete implementation of the [Clipboard
+API][2]. Due to this limitation, the plugin will degrade to plain text only mode
+in that browser. Unfortunately, even that does work in all cases as Flutter's
+built-in clipboard support is also broken due to additional restrictions placed
+on the Clipboard API by Firefox. You can find the relevant Flutter bug
+[here][3].
 
 ## Usage
 
@@ -51,3 +61,5 @@ await RichClipboard.setData(RichClipboardData({
 ```
 
 [1]: https://api.flutter.dev/flutter/services/Clipboard-class.html
+[2]: https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+[3]: https://github.com/flutter/flutter/issues/48581

@@ -1,6 +1,10 @@
+## 0.1.0
+
+- Adding endorsed web implementation.
+
 ## 0.0.3
 
-- Adding endorsed Linux implementation
+- Adding endorsed Linux implementation.
 
 ## 0.0.2
 

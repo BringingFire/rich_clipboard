@@ -39,6 +39,8 @@ dependency_overrides:
     path: ../../rich_clipboard_windows
   rich_clipboard_linux:
     path: ../../rich_clipboard_linux
+  rich_clipboard_web:
+    path: ../../rich_clipboard_web
   rich_clipboard_platform_interface:
     path: ../../rich_clipboard_platform_interface
   # TODO: Remove this when super_editor publishes new versions to pub.dev
