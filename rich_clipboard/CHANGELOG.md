@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Fixing README, no functional changes.
+
 ## 0.1.0
 
 - Adding endorsed web implementation.

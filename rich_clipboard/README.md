@@ -27,10 +27,10 @@ macOS | Windows | Linux | Web             | Android | iOS
 
 ### Firefox
 
-While "the web" is currently a supported platform, support for Firefox is
-currently not possible due to its incomplete implementation of the [Clipboard
-API][2]. Due to this limitation, the plugin will degrade to plain text only mode
-in that browser. Unfortunately, even that does work in all cases as Flutter's
+While "web" is currently a supported platform, support for Firefox is currently
+not possible due to its incomplete implementation of the [Clipboard API][2].
+Because of this, the plugin will degrade to plain text only mode in that
+browser. Unfortunately, even that does not work in all cases as Flutter's
 built-in clipboard support is also broken due to additional restrictions placed
 on the Clipboard API by Firefox. You can find the relevant Flutter bug
 [here][3].
