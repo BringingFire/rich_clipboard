@@ -2,7 +2,7 @@ name: rich_clipboard
 description: Flutter plugin for accessing rich text and other data types in the system clipboard.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard
-version: 0.1.1
+version: 0.2.0
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -15,6 +15,7 @@ dependencies:
   rich_clipboard_windows: ^0.0.1
   rich_clipboard_linux: ^0.0.1
   rich_clipboard_web: ^0.0.1
+  rich_clipboard_android: ^0.0.1
   rich_clipboard_platform_interface: ^0.0.1
 
 dev_dependencies:
@@ -33,3 +34,5 @@ flutter:
         default_package: rich_clipboard_linux
       web:
         default_package: rich_clipboard_web
+      android:
+        default_package: rich_clipboard_android
