@@ -16,6 +16,7 @@ dependencies:
   rich_clipboard_linux: ^0.0.1
   rich_clipboard_web: ^0.0.1
   rich_clipboard_android: ^0.0.1
+  rich_clipboard_ios: ^0.0.1
   rich_clipboard_platform_interface: ^0.0.1
 
 dev_dependencies:
@@ -36,3 +37,5 @@ flutter:
         default_package: rich_clipboard_web
       android:
         default_package: rich_clipboard_android
+      ios:
+        default_package: rich_clipboard_ios

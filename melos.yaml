@@ -10,6 +10,7 @@ packages:
   - rich_clipboard_linux/pubspec.yaml
   - rich_clipboard_web/pubspec.yaml
   - rich_clipboard_android/pubspec.yaml
+  - rich_clipboard_ios/pubspec.yaml
 
 scripts:
   analyze: melos exec -- "dart analyze ."
