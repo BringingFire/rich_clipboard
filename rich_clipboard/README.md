@@ -6,16 +6,11 @@
 A Flutter plugin providing access to additional data types in the system
 clipboard.
 
-## Warning: Alpha Software
-
-This is an alpha package. The API can and likely will go through some revisions
-as support is added for more platforms.
-
 ## Platform Support
 
 macOS | Windows | Linux | Web             | Android | iOS
 :----:|:-------:|:-----:|:---------------:|:-------:|:---:
- ✅   | ✅       | ✅    | ✅ [*](#firefox) | ❌      | ❌
+ ✅   | ✅       | ✅    | ✅ [*](#firefox) | ✅      | ✅
 
 ## Unsupported Platforms
 
