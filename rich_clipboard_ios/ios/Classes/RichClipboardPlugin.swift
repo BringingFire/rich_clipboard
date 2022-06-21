@@ -28,7 +28,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         }
     }
 
-    public func getData() -> [String: String] {
+    func getData() -> [String: String] {
         let board = UIPasteboard.general
         var result: [String: String] = [:]
         if let text = board.string {
@@ -53,38 +53,19 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         let board = UIPasteboard.general
         board.items = [[:]]
 
-        guard let data = arguments as? [String: String] else {
+        guard let data = (arguments as? [String: String?])?.filter({ $0.value != nil }) as? [String: String] else {
             return
         }
 
         if let text = data[mimeTextPlain] {
-            board.items[0][utTypeTextPlain] = text
-//            board.setValue(text, forPasteboardType: utTypeTextPlain)
+            board.string = text
         }
 
-//        if let html = data[mimeTextHtml] {
-//            board.items[0][utTypeTextHtml] = html
-        ////            board.setValue(html, forPasteboardType: utTypeTextHtml)
-//        }
+        if let html = data[mimeTextHtml] {
+            board.items[0][utTypeTextHtml] = html
+        }
     }
 
-//
-//    func getRtfAsHtml() -> String? {
-//        guard let boardRtf = NSPasteboard.general.data(forType: .rtf) else {
-//            return nil
-//        }
-//        guard let attrStr = NSAttributedString(rtf: boardRtf, documentAttributes: nil) else {
-//            return nil
-//        }
-//        guard let htmlData = try? attrStr.data(
-//            from: NSRange(location: 0, length: attrStr.length),
-//            documentAttributes: [.documentType: NSAttributedString.DocumentType.html])
-//        else {
-//            return nil
-//        }
-//        return String(data: htmlData, encoding: String.Encoding.utf8)
-//    }
-//
     func getAvailableTypes() -> [String] {
         return UIPasteboard.general.types
     }
