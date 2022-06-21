@@ -5,6 +5,8 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - integration_test (0.0.1):
+    - Flutter
   - just_audio (0.0.1):
     - Flutter
   - path_provider_ios (0.0.1):
@@ -26,6 +28,7 @@ PODS:
 DEPENDENCIES:
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - Flutter (from `Flutter`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - rich_clipboard_ios (from `.symlinks/plugins/rich_clipboard_ios/ios`)
@@ -44,6 +47,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audio_session/ios"
   Flutter:
     :path: Flutter
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
   path_provider_ios:
@@ -65,6 +70,7 @@ SPEC CHECKSUMS:
   audio_session: 4f3e461722055d21515cf3261b64c973c062f345
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  integration_test: a1e7d09bd98eca2fc37aefd79d4f41ad37bdbbe5
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   rich_clipboard_ios: 7588abe18f881a6d0e9ec0b12e51cae2761e8942
