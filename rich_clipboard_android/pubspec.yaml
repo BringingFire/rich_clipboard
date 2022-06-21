@@ -1,6 +1,6 @@
 name: rich_clipboard_android
 description: Android implementation of the rich_clipboard plugin
-version: 0.1.0+1
+version: 1.0.0
 publish_to: none
 
 environment:
@@ -10,8 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  rich_clipboard_platform_interface: ^0.0.1
-
+  rich_clipboard_platform_interface: ^1.0.0
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:

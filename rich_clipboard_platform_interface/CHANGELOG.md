@@ -1,3 +1,9 @@
+## 1.0.0
+
+ - Promoting package to stable with version 1.0.0
+
+ - **FIX**: Only return a non-empty array if text data exists in the clipboard in the fallback implementation.
+
 ## 0.0.1
 
 - Initial release.

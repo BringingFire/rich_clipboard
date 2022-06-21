@@ -1,3 +1,7 @@
+## 1.0.0
+
+ - Promoting package to stable with version 1.0.0
+
 ## 0.1.1
 
 - Fixing README, no functional changes.

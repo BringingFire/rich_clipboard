@@ -2,7 +2,7 @@ name: rich_clipboard_windows
 description: Windows implementation of the rich_clipboard plugin.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_windows
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_windows
-version: 0.0.2
+version: 1.0.0
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -13,7 +13,7 @@ dependencies:
   ffi: ^1.1.2
   flutter:
     sdk: flutter
-  rich_clipboard_platform_interface: ^0.0.1
+  rich_clipboard_platform_interface: ^1.0.0
   win32: ^2.5.1
 
 dev_dependencies:

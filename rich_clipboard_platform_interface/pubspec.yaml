@@ -2,7 +2,7 @@ name: rich_clipboard_platform_interface
 description: A common platform interface for the rich_clipboard plugin.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_platform_interface
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_platform_interface
-version: 0.0.1
+version: 1.0.0
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
