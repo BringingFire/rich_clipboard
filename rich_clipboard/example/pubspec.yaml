@@ -15,14 +15,8 @@ dependencies:
   gap: ^2.0.0
   flutter_widget_from_html: ^0.8.5
   # TODO: Switch to super_editor versions from pub.dev at some point
-  super_editor:
-    git:
-      url: https://github.com/superlistapp/super_editor.git
-      path: super_editor
-  super_editor_markdown:
-    git:
-      url: https://github.com/superlistapp/super_editor.git
-      path: super_editor_markdown
+  super_editor: 0.2.0
+  super_editor_markdown: 0.2.0
   markdown: ^4.0.1
   html2md: ^1.2.5
 
@@ -49,7 +43,17 @@ dependency_overrides:
     path: ../../rich_clipboard_ios
   rich_clipboard_platform_interface:
     path: ../../rich_clipboard_platform_interface
-  # TODO: Remove this when super_editor publishes new versions to pub.dev
+  # TODO: Remove these when super_editor publishes updated versions of all its packages
+  super_editor:
+    git:
+      url: https://github.com/superlistapp/super_editor.git
+      ref: 6c439f31f5047f9b2cecc011351cb321395fb795
+      path: super_editor
+  super_editor_markdown:
+    git:
+      url: https://github.com/superlistapp/super_editor.git
+      ref: 6c439f31f5047f9b2cecc011351cb321395fb795
+      path: super_editor_markdown
   attributed_text:
     git:
       url: https://github.com/superlistapp/super_editor.git
