@@ -1,8 +1,8 @@
-# rich_clipboard_windows
+# rich_clipboard_ios
 
-[![Pub Version](https://img.shields.io/pub/v/rich_clipboard_windows)](https://pub.dev/packages/rich_clipboard_windows)
+[![Pub Version](https://img.shields.io/pub/v/rich_clipboard_ios)](https://pub.dev/packages/rich_clipboard_ios)
 
-The Windows implementation of [`rich_clipboard`][1].
+The iOS implementation of [`rich_clipboard`][1].
 
 ## Usage
 
