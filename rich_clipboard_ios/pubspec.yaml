@@ -1,7 +1,8 @@
 name: rich_clipboard_ios
 description: iOS implementation of the rich_clipboard plugin
+homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_ios
+repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_ios
 version: 1.0.0
-publish_to: none
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
