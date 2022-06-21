@@ -13,12 +13,21 @@ packages:
   - rich_clipboard_ios/pubspec.yaml
 
 scripts:
-  analyze: melos exec -- "dart analyze ."
+  analyze:
+    run: dart analyze .
+    exec: {}
   generate:
-    run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    run: flutter pub run build_runner build --delete-conflicting-outputs
+    exec: {}
     select-package:
       depends-on: build_runner
   test:
-    run: melos exec --fail-fast -- "flutter test"
+    run: flutter test -r expanded
+    exec:
+      fail-fast: true
     select-package:
       dir-exists: test
+
+command:
+  bootstrap:
+   usePubspecOverrides: true

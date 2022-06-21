@@ -35,3 +35,15 @@ runs:
         flutter config --enable-linux-desktop
         flutter config --enable-windows-desktop
         flutter config --enable-macos-desktop
+    
+    - name: Install melos
+      shell: bash
+      run: flutter pub global activate melos
+
+    - name: Install dependencies
+      shell: bash
+      run: melos bs
+
+    - name: Generate code
+      shell: bash
+      run: melos run generate

@@ -27,38 +27,12 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
       
-      - name: Install dependencies
-        shell: bash
-        run: |
-          for dir in rich_clipboard{,_platform_interface,_macos,_windows}; do
-            pushd $dir
-            flutter pub get
-            popd
-          done
-
-      - name: Generate code
-        shell: bash
-        working-directory: rich_clipboard_windows
-        run: flutter pub run build_runner build --delete-conflicting-outputs
-
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
 
       - name: Analyze code
         working-directory: rich_clipboard
-        run: flutter analyze
-
-      - name: Analyze code (platform)
-        working-directory: rich_clipboard_platform_interface
-        run: flutter analyze
-
-      - name: Analyze code (macOS)
-        working-directory: rich_clipboard_macos
-        run: flutter analyze
-
-      - name: Analyze code (Windows)
-        working-directory: rich_clipboard_windows
-        run: flutter analyze
+        run: melos run analyze
 
   test-windows:
     name: Test (Windows)
@@ -70,14 +44,6 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
-
-      - name: Install dependencies
-        working-directory: rich_clipboard_windows
-        run: flutter pub get
-
-      - name: Generate code
-        working-directory: rich_clipboard_windows
-        run: flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Run tests
         working-directory: rich_clipboard_windows
