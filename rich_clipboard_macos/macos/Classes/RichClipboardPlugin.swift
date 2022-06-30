@@ -10,7 +10,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         let instance = RichClipboardPlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
-    
+
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "getData":
@@ -24,7 +24,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
             result(FlutterMethodNotImplemented)
         }
     }
-    
+
     public func getData() -> [String: String] {
         let board = NSPasteboard.general
         var result: [String: String] = [:]
@@ -36,23 +36,24 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         }
         return result
     }
-    
+
     func setData(_ arguments: Any?) {
         guard let data = (arguments as? [String: String?])?.compactMapValues({ $0 }) else {
             return
         }
-        
+
         let board = NSPasteboard.general
         board.clearContents()
-        
+
         if let text = data[mimeTextPlain] {
             board.setString(text, forType: .string)
         }
-        
+
         if let html = data[mimeTextHtml] {
             board.setString(html, forType: .html)
         }
     }
+
     func getRtfAsHtml() -> String? {
         guard let boardRtf = NSPasteboard.general.data(forType: .rtf) else {
             return nil
@@ -68,7 +69,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         }
         return String(data: htmlData, encoding: String.Encoding.utf8)
     }
-    
+
     func getAvailableTypes() -> [String] {
         guard let types = NSPasteboard.general.types else {
             return []
