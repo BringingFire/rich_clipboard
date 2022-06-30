@@ -38,18 +38,16 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
     }
 
     func setData(_ arguments: Any?) {
-        guard let data = arguments as? [String: String] else {
-            return
-        }
-
-        guard let text = data[mimeTextPlain] else {
+        guard let data = (arguments as? [String: String?])?.compactMapValues({ $0 }) else {
             return
         }
 
         let board = NSPasteboard.general
         board.clearContents()
 
-        board.setString(text, forType: .string)
+        if let text = data[mimeTextPlain] {
+            board.setString(text, forType: .string)
+        }
 
         if let html = data[mimeTextHtml] {
             board.setString(html, forType: .html)

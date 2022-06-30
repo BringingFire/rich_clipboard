@@ -53,7 +53,7 @@ public class RichClipboardPlugin: NSObject, FlutterPlugin {
         let board = UIPasteboard.general
         board.items = [[:]]
 
-        guard let data = (arguments as? [String: String?])?.filter({ $0.value != nil }) as? [String: String] else {
+        guard let data = (arguments as? [String: String?])?.compactMapValues({ $0 }) else {
             return
         }
 
