@@ -1,6 +1,10 @@
+## 1.0.1
+
+ - Fixing a bug where setData would fail if html was unset.
+
 ## 1.0.0
 
- - Promoting package to stable with version 1.0.0
+ - Promoting package to stable with version 1.0.0.
 
 ## 0.0.2
 
