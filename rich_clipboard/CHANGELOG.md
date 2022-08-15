@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - Modifying example project pubspec to keep pub's package analysis happy
+
 ## 1.0.0
 
  - Promoting package to stable with version 1.0.0
