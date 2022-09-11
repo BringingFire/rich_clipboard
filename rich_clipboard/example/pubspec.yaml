@@ -29,6 +29,20 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 dependency_overrides:
+  rich_clipboard_macos:
+    path: ../../rich_clipboard_macos
+  rich_clipboard_windows:
+    path: ../../rich_clipboard_windows
+  rich_clipboard_linux:
+    path: ../../rich_clipboard_linux
+  rich_clipboard_web:
+    path: ../../rich_clipboard_web
+  rich_clipboard_android:
+    path: ../../rich_clipboard_android
+  rich_clipboard_ios:
+    path: ../../rich_clipboard_ios
+  rich_clipboard_platform_interface:
+    path: ../../rich_clipboard_platform_interface
   # TODO: Remove these when super_editor publishes updated versions of all its packages
   super_editor:
     git:
