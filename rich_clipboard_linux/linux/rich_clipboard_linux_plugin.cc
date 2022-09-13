@@ -46,6 +46,14 @@ public:
   {
     textHtml.reset(new string(text));
   }
+  bool isEmpty()
+  {
+    return textPlain == nullptr && textHtml == nullptr;
+  }
+  bool isNotEmpty()
+  {
+    return !isEmpty();
+  }
 };
 
 struct _FlRichClipboardPlugin
@@ -164,33 +172,42 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
     if (textPlainValue != nullptr)
     {
       auto *textPlainCString = fl_value_get_string(textPlainValue);
-      clipboardData->setTextPlain(textPlainCString);
+      if (textPlainCString != nullptr)
+      {
+        clipboardData->setTextPlain(textPlainCString);
+      }
     }
     auto *textHtmlValue = fl_value_lookup_string(args, kMimeTextHtml);
     if (textHtmlValue != nullptr)
     {
       auto *textHtmlCString = fl_value_get_string(textHtmlValue);
-      clipboardData->setTextHtml(textHtmlCString);
+      if (textHtmlCString != nullptr)
+      {
+        clipboardData->setTextHtml(textHtmlCString);
+      }
     }
 
-    auto *targetList = gtk_target_list_new(nullptr, 0);
-    gtk_target_list_add_text_targets(targetList, kUserInfoTextPlain);
-    gtk_target_list_add(targetList, kGdkAtomTextHtml, 0, kUserInfoTextHtml);
+    if (clipboardData->isNotEmpty())
+    {
+      auto *targetList = gtk_target_list_new(nullptr, 0);
+      gtk_target_list_add_text_targets(targetList, kUserInfoTextPlain);
+      gtk_target_list_add(targetList, kGdkAtomTextHtml, 0, kUserInfoTextHtml);
 
-    gint numTargets = 1;
-    auto *targetTable = gtk_target_table_new_from_list(targetList, &numTargets);
-    gtk_clipboard_set_with_data(
-        clipboard,
-        targetTable,
-        numTargets,
-        gtk_clipboard_get_target_text_callback,
-        gtk_clipboard_clear_text_callback,
-        clipboardData);
-    gtk_clipboard_set_can_store(clipboard, targetTable, numTargets);
-    gtk_clipboard_store(clipboard);
+      gint numTargets = 1;
+      auto *targetTable = gtk_target_table_new_from_list(targetList, &numTargets);
+      gtk_clipboard_set_with_data(
+          clipboard,
+          targetTable,
+          numTargets,
+          gtk_clipboard_get_target_text_callback,
+          gtk_clipboard_clear_text_callback,
+          clipboardData);
+      gtk_clipboard_set_can_store(clipboard, targetTable, numTargets);
+      gtk_clipboard_store(clipboard);
 
-    gtk_target_list_unref(targetList);
-    gtk_target_table_free(targetTable, numTargets);
+      gtk_target_list_unref(targetList);
+      gtk_target_table_free(targetTable, numTargets);
+    }
 
     fl_method_call_respond_success(method_call, nullptr, nullptr);
   }
