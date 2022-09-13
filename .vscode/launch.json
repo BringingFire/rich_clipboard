@@ -26,6 +26,13 @@
       "type": "dart",
       "program": "lib/main.dart",
       "flutterMode": "release"
+    },
+    {
+      "name": "Debug Linux native",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceRoot}/rich_clipboard/example/build/linux/x64/debug/bundle/example",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
