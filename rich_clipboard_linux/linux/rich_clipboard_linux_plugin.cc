@@ -163,37 +163,31 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
   else if (strcmp(method, kSetData) == 0)
   {
     auto *clipboard = gtk_clipboard_get_default(gdk_display_get_default());
+    gtk_clipboard_set_text(clipboard, "", 0);
     gtk_clipboard_clear(clipboard);
 
     auto *args = fl_method_call_get_args(method_call);
 
+    auto *targetList = gtk_target_list_new(nullptr, 0);
     auto *clipboardData = new RichClipboardData();
     auto *textPlainValue = fl_value_lookup_string(args, kMimeTextPlain);
-    if (textPlainValue != nullptr)
+    if (textPlainValue != nullptr && fl_value_get_type(textPlainValue) == FL_VALUE_TYPE_STRING)
     {
       auto *textPlainCString = fl_value_get_string(textPlainValue);
-      if (textPlainCString != nullptr)
-      {
-        clipboardData->setTextPlain(textPlainCString);
-      }
+      clipboardData->setTextPlain(textPlainCString);
+      gtk_target_list_add_text_targets(targetList, kUserInfoTextPlain);
     }
     auto *textHtmlValue = fl_value_lookup_string(args, kMimeTextHtml);
-    if (textHtmlValue != nullptr)
+    if (textHtmlValue != nullptr && fl_value_get_type(textHtmlValue) == FL_VALUE_TYPE_STRING)
     {
       auto *textHtmlCString = fl_value_get_string(textHtmlValue);
-      if (textHtmlCString != nullptr)
-      {
-        clipboardData->setTextHtml(textHtmlCString);
-      }
+      clipboardData->setTextHtml(textHtmlCString);
+      gtk_target_list_add(targetList, kGdkAtomTextHtml, 0, kUserInfoTextHtml);
     }
 
     if (clipboardData->isNotEmpty())
     {
-      auto *targetList = gtk_target_list_new(nullptr, 0);
-      gtk_target_list_add_text_targets(targetList, kUserInfoTextPlain);
-      gtk_target_list_add(targetList, kGdkAtomTextHtml, 0, kUserInfoTextHtml);
-
-      gint numTargets = 1;
+      gint numTargets;
       auto *targetTable = gtk_target_table_new_from_list(targetList, &numTargets);
       gtk_clipboard_set_with_data(
           clipboard,
@@ -205,9 +199,9 @@ static void method_call_cb(FlMethodChannel *channel, FlMethodCall *method_call,
       gtk_clipboard_set_can_store(clipboard, targetTable, numTargets);
       gtk_clipboard_store(clipboard);
 
-      gtk_target_list_unref(targetList);
       gtk_target_table_free(targetTable, numTargets);
     }
+    gtk_target_list_unref(targetList);
 
     fl_method_call_respond_success(method_call, nullptr, nullptr);
   }
