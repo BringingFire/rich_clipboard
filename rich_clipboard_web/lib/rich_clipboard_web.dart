@@ -90,13 +90,21 @@ class RichClipboardWeb extends RichClipboardPlatform {
       data.toMap().entries.where((entry) => entry.value != null).map(
             (entry) => MapEntry(
               entry.key,
-              Blob(entry.value!.split(''), entry.key),
+              // Wrapping the string in a list here satisfies the Blob
+              // constructor and works just fine. If something in Dart or the
+              // web APIs change to require a list of individual characters in
+              // the future, use the .characters getter from the characters
+              // package to safely split the string into unicode grapheme
+              // clusters.
+              Blob([entry.value!], entry.key),
             ),
           ),
     );
 
-    final item = _ClipboardItem(jsify(dataMap));
-    await clipboard.write([item]);
+    final items = <_ClipboardItem>[
+      if (dataMap.isNotEmpty) _ClipboardItem(jsify(dataMap))
+    ];
+    await clipboard.write(items);
   }
 }
 
