@@ -119,7 +119,7 @@ extension _BlobText on Blob {
 @JS('ClipboardItem')
 @staticInterop
 class _ClipboardItem {
-  external _ClipboardItem(dynamic args);
+  external factory _ClipboardItem(dynamic args);
 }
 
 extension _ClipboardItemImpl on _ClipboardItem {
