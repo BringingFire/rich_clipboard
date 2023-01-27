@@ -1,3 +1,7 @@
+## 1.0.2
+
+ - Fixing compilation in Flutter 3.7.0 / Dart 2.19.
+
 ## 1.0.1
 
  - Fixing an issue where copying multibyte characters would place invalid unicode in the clipboard.
