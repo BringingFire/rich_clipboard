@@ -38,13 +38,15 @@ class _SuperEditorPageState extends State<SuperEditorPage> {
       child: Column(
         children: [
           Expanded(
-            child: SuperEditor(
-              editor: _editor,
-              keyboardActions: [
-                _copy,
-                _paste,
-                ...defaultKeyboardActions,
-              ],
+            child: SingleChildScrollView(
+              child: SuperEditor(
+                editor: _editor,
+                keyboardActions: [
+                  _copy,
+                  _paste,
+                  ...defaultKeyboardActions,
+                ],
+              ),
             ),
           ),
           Center(
