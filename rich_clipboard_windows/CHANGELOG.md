@@ -1,3 +1,7 @@
+## 1.0.2
+
+- Updating win32 dependency to ">=2.5.1 <5.0.0"
+
 ## 1.0.1
 
 - Updating ffi dependency to ">=1.1.2 <3.0.0"
