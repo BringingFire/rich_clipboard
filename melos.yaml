@@ -2,25 +2,23 @@ name: rich_clipboard
 repository: https://github.com/BringingFire/rich_clipboard
 
 packages:
-  - rich_clipboard/pubspec.yaml
-  - rich_clipboard/example/pubspec.yaml
-  - rich_clipboard_platform_interface/pubspec.yaml
-  - rich_clipboard_macos/pubspec.yaml
-  - rich_clipboard_windows/pubspec.yaml
-  - rich_clipboard_linux/pubspec.yaml
-  - rich_clipboard_web/pubspec.yaml
-  - rich_clipboard_android/pubspec.yaml
-  - rich_clipboard_ios/pubspec.yaml
+  - rich_clipboard
+  - rich_clipboard/example
+  - rich_clipboard_platform_interface
+  - rich_clipboard_macos
+  - rich_clipboard_windows
+  - rich_clipboard_linux
+  - rich_clipboard_web
+  - rich_clipboard_android
+  - rich_clipboard_ios
 
 scripts:
-  postbootstrap: melos run generate
-
   analyze:
     exec: dart analyze .
   generate:
     exec: flutter pub run build_runner build --delete-conflicting-outputs
-    select-package:
-      depends-on: build_runner
+    packageFilters:
+      dependsOn: build_runner
   test:
     run: flutter test -r expanded
     exec:
@@ -30,4 +28,5 @@ scripts:
 
 command:
   bootstrap:
-   usePubspecOverrides: true
+    hooks:
+      post: dart run melos run generate
