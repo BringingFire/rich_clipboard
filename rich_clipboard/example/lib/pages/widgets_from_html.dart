@@ -22,7 +22,6 @@ class _WidgetsFromHtmlPageState extends State<WidgetsFromHtmlPage> {
             child: SingleChildScrollView(
               child: HtmlWidget(
                 _html,
-                isSelectable: true,
               ),
             ),
           ),

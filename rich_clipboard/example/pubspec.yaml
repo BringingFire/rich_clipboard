@@ -12,8 +12,8 @@ dependencies:
   rich_clipboard:
     path: ../
 
-  gap: ^2.0.0
-  flutter_widget_from_html: ^0.8.5
+  gap: ^3.0.1
+  flutter_widget_from_html: ^0.13.0-alpha.1
   super_editor: ^0.2.3+1
   super_editor_markdown: ^0.1.4+1
   markdown: ^4.0.1
@@ -42,6 +42,9 @@ dependency_overrides:
     path: ../../rich_clipboard_ios
   rich_clipboard_platform_interface:
     path: ../../rich_clipboard_platform_interface
+  # TODO: Remove these when upstream dependencies work themselves out
+  chewie: "^1.5.0"
+  win32: ">=5.0.0"
 
 flutter:
   uses-material-design: true
