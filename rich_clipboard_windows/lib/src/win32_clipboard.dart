@@ -83,8 +83,8 @@ class Win32Clipboard {
   ///
   /// You must already have opened the clipboard with [Win32Clipboard.open].
   String? getString(int format, {encoding = ClipboardEncoding.utf16}) {
-    final handle = GetClipboardData(format);
-    if (handle == NULL) {
+    final handle = Pointer.fromAddress(GetClipboardData(format));
+    if (handle == nullptr) {
       return null;
     }
 
@@ -145,7 +145,7 @@ class Win32Clipboard {
     }
 
     final memHandle = GlobalAlloc(_kGMemMovable, (units.length + 1) * unitSize);
-    if (memHandle == NULL) {
+    if (memHandle == nullptr) {
       return;
     }
 
@@ -174,7 +174,7 @@ class Win32Clipboard {
     }
 
     GlobalUnlock(memHandle);
-    SetClipboardData(format, memHandle);
+    SetClipboardData(format, memHandle.address);
   }
 }
 
