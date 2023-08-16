@@ -2,7 +2,7 @@ name: rich_clipboard_windows
 description: Windows implementation of the rich_clipboard plugin.
 homepage: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_windows
 repository: https://github.com/BringingFire/rich_clipboard/tree/dev/rich_clipboard_windows
-version: 1.0.2
+version: 1.0.3
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
