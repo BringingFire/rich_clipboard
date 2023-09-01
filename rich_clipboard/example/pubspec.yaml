@@ -14,8 +14,8 @@ dependencies:
 
   gap: ^3.0.1
   flutter_widget_from_html: ^0.13.0-alpha.1
-  super_editor: ^0.2.3+1
-  super_editor_markdown: ^0.1.4+1
+  super_editor: ^0.2.6
+  super_editor_markdown: ^0.1.5
   markdown: ^4.0.1
   html2md: ^1.2.5
 
