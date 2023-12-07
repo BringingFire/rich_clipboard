@@ -1,4 +1,4 @@
-name: rich_clipboard_workspace
+name: rich_clipboard
 publish_to: 'none'
 
 environment:
