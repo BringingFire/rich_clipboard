@@ -25,6 +25,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 34
+    namespace "com.bringingfire.rich_clipboard"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -42,7 +43,6 @@ android {
     defaultConfig {
         minSdkVersion 16
     }
-    namespace 'com.bringingfire.rich_clipboard'
 }
 
 dependencies {
