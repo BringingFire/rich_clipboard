@@ -16,10 +16,7 @@ dependencies:
   rich_clipboard_linux: ^1.0.0
   rich_clipboard_web: ^1.0.0
   rich_clipboard_android:
-    git:
-      url: https://github.com/penkzhou/rich_clipboard.git
-      path: rich_clipboard_android
-      ref: d95d83b4fd2509123ffdec1dd983036e16577f21
+    path: ../rich_clipboard_android
   rich_clipboard_ios: ^1.0.0
   rich_clipboard_platform_interface: ^1.0.0
 dev_dependencies:
