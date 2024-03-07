@@ -33,3 +33,6 @@ build/
 # Ignore generated code
 *.g.dart
 *.mocks.dart
+
+# FVM Version Cache
+.fvm/
