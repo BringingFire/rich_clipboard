@@ -15,7 +15,8 @@ dependencies:
   rich_clipboard_windows: ^1.0.0
   rich_clipboard_linux: ^1.0.0
   rich_clipboard_web: ^1.0.0
-  rich_clipboard_android: ^1.0.0
+  rich_clipboard_android:
+    path: ../rich_clipboard_android
   rich_clipboard_ios: ^1.0.0
   rich_clipboard_platform_interface: ^1.0.0
 dev_dependencies:
